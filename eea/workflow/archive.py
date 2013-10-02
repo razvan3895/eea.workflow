@@ -43,7 +43,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
 
         rv = NamedVocabulary('eea.workflow.reasons')
         vocab = rv.getVocabularyDict(context)
-        reason = vocab.get(self.reason, "Other")
+        reason = vocab.get(reason, "Other")
 
         if custom_message:
             reason += u" (%s)" % custom_message

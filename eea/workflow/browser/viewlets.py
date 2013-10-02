@@ -3,6 +3,7 @@
 
 from plone.app.layout.viewlets.common import ViewletBase
 from eea.workflow.interfaces import IObjectArchivator
+from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
 
 
 class ArchiveViewlet(ViewletBase):
@@ -11,4 +12,13 @@ class ArchiveViewlet(ViewletBase):
 
     def update(self):
         info = IObjectArchivator(self.context)
-        self.info = info
+
+        rv = NamedVocabulary('eea.workflow.reasons')
+        vocab = rv.getVocabularyDict(self.context)
+
+        archive_info = dict(initiator=info.initiator,
+                            archive_date=info.archive_date,
+                            reason=vocab.get(info.reason, "Other"),
+                            custom_message=info.custom_message)
+
+        self.info = archive_info

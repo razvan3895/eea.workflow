@@ -75,5 +75,5 @@ A viewlet has been added to display a portal message
     ...                                    PloneTestCase.default_password))
     >>> doc_url = doc.absolute_url()
     >>> browser.open(doc_url)
-    >>> 'Content_is_outdated' in browser.contents
+    >>> 'Content is outdated' in browser.contents
     True
