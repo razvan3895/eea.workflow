@@ -47,5 +47,33 @@ An entry has been added to the workflow history of that object
     >>> print len(action)
     1
     >>> action = action[0]
-    >>> print action['comments']
-    >>> msg = u"Archived by portal_owner on %s by request from "
+    >>> msg = u"Archived by portal_owner on %s by request from TheInitiator with reason: Content is outdated" % doc.ExpirationDate()
+    >>> action['comments'] == msg
+    True
+
+An annotations storage has been added to the archived object
+
+    >>> annotation = doc.__annotations__['eea.workflow.archive']
+    >>> annotation == IObjectArchivator(doc)
+    True
+    >>> annotation.is_archived
+    True
+    >>> annotation.archive_date.ISO8601() == doc.ExpirationDate()
+    True
+    >>> print annotation.reason
+    content_is_outdated
+
+A viewlet has been added to display a portal message
+
+    >>> from Products.PloneTestCase import PloneTestCase
+    >>> from Testing.testbrowser import Browser
+    >>> browser = Browser()
+    >>> browser.handleErrors = False
+    >>> self.portal.error_log._ignored_exceptions = ()
+    >>> browser.addHeader('Authorization',
+    ...                   'Basic %s:%s' % (PloneTestCase.portal_owner,
+    ...                                    PloneTestCase.default_password))
+    >>> doc_url = doc.absolute_url()
+    >>> browser.open(doc_url)
+    >>> 'Content_is_outdated' in browser.contents
+    True

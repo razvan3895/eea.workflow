@@ -21,7 +21,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
     @property
     def is_archived(self):
         """Is this object archived?"""
-        return bool(IObjectArchived.providedBy(self.__parent__))
+        return bool(getattr(self, 'archive_date', False))
 
     def archive(self, context, initiator=None, reason=None, custom_message=None):
         """Archive the object"""
@@ -43,7 +43,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
 
         rv = NamedVocabulary('eea.workflow.reasons')
         vocab = rv.getVocabularyDict(context)
-        reason = vocab.get('reason', "Other")
+        reason = vocab.get(self.reason, "Other")
 
         if custom_message:
             reason += u" (%s)" % custom_message
