@@ -77,3 +77,9 @@ A viewlet has been added to display a portal message
     >>> browser.open(doc_url)
     >>> 'Content is outdated' in browser.contents
     True
+
+A view is used by the javascript to show information about the archive status when the archive action is executed
+
+    >>> browser.open(doc_url + '/@@eea.workflow.archived')
+    >>> 'Content is outdated' in browser.contents
+    True
