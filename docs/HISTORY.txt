@@ -3,6 +3,9 @@ Changelog
 
 6.2-dev - (unreleased)
 ----------------------
+* Feature: it is now possible to mark content as archived. Details about the
+  archival reasons are added through a popup dialog.
+  [tiberich #9327]
 
 6.1 - (2013-09-23)
 ------------------
