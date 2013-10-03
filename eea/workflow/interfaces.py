@@ -95,10 +95,11 @@ class IObjectArchivator(Interface):
 
     is_archived = Attribute("Is this object archived?")
     initiator = Attribute("The actor who initiated the archival")
-    reason = Attribute("The reason for archival, selected from a predefined list")
+    reason = Attribute("Reason for archival, selected from predefined list")
     custom_message = Attribute("A human-readable text reason for archival")
 
-    # It may be useful to keep this date, as the object's ExpirationDate can be changed
+    # It may be useful to keep this date, as the 
+    # object's ExpirationDate can be changed
     archive_date = Attribute("The date when the object was archived")
 
     def archive():

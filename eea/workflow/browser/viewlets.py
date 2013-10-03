@@ -11,6 +11,8 @@ class ArchiveViewlet(ViewletBase):
     """
 
     def update(self):
+        """ Update viewlet
+        """
         info = IObjectArchivator(self.context)
 
         rv = NamedVocabulary('eea.workflow.reasons')

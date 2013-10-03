@@ -1,9 +1,7 @@
 """ Archival views
 """
 
-from DateTime import DateTime
 from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
-from Products.CMFCore.utils import getToolByName
 from Products.Five import BrowserView
 from eea.workflow.interfaces import IObjectArchivator
 
@@ -13,7 +11,7 @@ class Reasons(BrowserView):
     """
 
     def __call__(self):
-        rv = NamedVocabulary('eea.workflow.reasons')    #TODO: rename to eea.workflow.archive_reasons
+        rv = NamedVocabulary('eea.workflow.reasons')
         reasons = rv.getVocabularyDict(self.context)
         return reasons
 
@@ -23,14 +21,14 @@ class ArchiveContent(BrowserView):
     """
 
     def __call__(self, **kwargs):
-        # TODO: validate form using zope.schema
         form = self.request.form
         values = {'initiator':      form.get('workflow_archive_initiator'),
-                  'custom_message': form.get('workflow_other_reason', '').strip(),
+                  'custom_message': 
+                    form.get('workflow_other_reason', '').strip(),
                   'reason':         form.get('workflow_reasons_radio', 'other')
                   }
         storage = IObjectArchivator(self.context)
-        storage.archive(context=self.context, **values)
+        storage.archive(self.context, **values)
         return "OK"
 
 
@@ -40,6 +38,8 @@ class ArchiveStatus(BrowserView):
 
     @property
     def info(self):
+        """ Info used in view
+        """
         info = IObjectArchivator(self.context)
 
         rv = NamedVocabulary('eea.workflow.reasons')
