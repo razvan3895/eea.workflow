@@ -3,11 +3,13 @@ Changelog
 
 6.4-dev - (unreleased)
 ----------------------
+* Bug fix: fix label in viewlet
+  [tiberich #9327]
 
 6.3 - (2013-10-04)
 ------------------
 * Change: fixed pylint and jslint warnings
-  [tiberich 16960]
+  [tiberich #16960]
 
 6.2 - (2013-10-04)
 ------------------

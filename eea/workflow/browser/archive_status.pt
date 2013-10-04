@@ -3,6 +3,6 @@
   This content has been archived on <span i18n:name="expiration-date" tal:content="python:toLocalizedTime(info['archive_date'])" />, reason: 
   <span i18n:name="reason">
     <span tal:replace="python:info['reason'].capitalize()"/>
-    <span tal:condition="info/custom_message" tal:replace="python:u'(' + info.custom_message + u')'"/>
+    <span tal:condition="info/custom_message" tal:replace="python:u'(' + info['custom_message'] + u')'"/>
   </span>
 </div>
