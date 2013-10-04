@@ -28,7 +28,7 @@ class ArchiveContent(BrowserView):
                   'reason':         form.get('workflow_reasons_radio', 'other')
                   }
         storage = IObjectArchivator(self.context)
-        storage.archive(context=self.context, **values)
+        storage.archive(self.context, **values)
         return "OK"
 
 
