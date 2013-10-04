@@ -5,7 +5,11 @@ function ArchiveDialog(){
 ArchiveDialog.prototype.install = function(){
     /* Install the Archive transition as an action before the Advanced link */
     var self = this;
+    
     var $advanced = $("#workflow-transition-advanced").parent();
+    if ($advanced.length === 0){
+        var $advanced = $("#workflow-transition-policy").parent();
+    }
     var $archive = $advanced.clone();
     $archive.removeClass('actionSeparator').find('a').attr('id', 'workflow-transition-archive').find('span').text('Archive...');
     $advanced.before($archive);
