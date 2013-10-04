@@ -1,6 +1,9 @@
 Changelog
 =========
 
+6.5-dev - (unreleased)
+----------------------
+
 6.4 - (2013-10-04)
 ------------------
 * Bug fix: fix label in viewlet
