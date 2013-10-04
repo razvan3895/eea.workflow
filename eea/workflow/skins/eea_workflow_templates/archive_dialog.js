@@ -1,5 +1,5 @@
 function ArchiveDialog(){
-    this.install()
+    this.install();
 }
 
 ArchiveDialog.prototype.install = function(){
@@ -65,8 +65,8 @@ ArchiveDialog.Window.prototype.handle_cancel = function(e){
 ArchiveDialog.Window.prototype.handle_ok = function(e){
     var self = this;
     jQuery('.notice').remove();
-    var workflow_reason = jQuery("input[name='workflow_reasons_radio']:checked").val()
-        var hasErrors = false;
+    var workflow_reason = jQuery("input[name='workflow_reasons_radio']:checked").val();
+    var hasErrors = false;
     if (!workflow_reason){
         jQuery("#workflow_reason_label").after("<div class='notice' style='color:Black; background-color:#FFE291; " +
                 "padding:3px'>Please select reason</div>");
