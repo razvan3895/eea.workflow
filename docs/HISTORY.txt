@@ -3,6 +3,12 @@ Changelog
 
 6.5-dev - (unreleased)
 ----------------------
+* Bug fix: Always show the Archive action in the workflow state menu, even
+  if the workflow is simplified and the Advanced page doesn't appear
+  [tiberich #9327]
+* Bug fix: added documentation for the publish dialog; only enable the publish
+  dialog for Assessments and Specifications
+  [tiberich #17221]
 
 6.4 - (2013-10-04)
 ------------------

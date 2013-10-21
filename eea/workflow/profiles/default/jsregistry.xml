@@ -3,8 +3,9 @@
   <javascript id="readiness.js"/>
   <javascript id="resolveuid.js"/>
   <javascript id="++resource++asyncworkflow.js" authenticated="True" />
-  <javascript id="publish_dialog.js" authenticated="True" />
-    <!-- expression="python: (not portal.portal_membership.isAnonymousUser()) and object.meta_type in ['Assessment', 'Specification']" -->
+  <javascript id="publish_dialog.js" 
+        expression="python: (not portal.portal_membership.isAnonymousUser()) and object.meta_type in ['Assessment', 'Specification']"
+    />
   <javascript id="archive_dialog.js"
     expression="python: not here.restrictedTraverse('@@plone_interface_info').provides('eea.workflow.interfaces.IObjectArchived')"
     authenticated="False"
