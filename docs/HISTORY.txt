@@ -1,6 +1,9 @@
 Changelog
 =========
 
+6.6-dev - (unreleased)
+----------------------
+
 6.5 - (2013-10-22)
 ------------------
 * Bug fix: Always show the Archive action in the workflow state menu, even
