@@ -1,8 +1,8 @@
 Changelog
 =========
 
-6.5-dev - (unreleased)
-----------------------
+6.5 - (2013-10-22)
+------------------
 * Bug fix: Always show the Archive action in the workflow state menu, even
   if the workflow is simplified and the Advanced page doesn't appear
   [tiberich #9327]
