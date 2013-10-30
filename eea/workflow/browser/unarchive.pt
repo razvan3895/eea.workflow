@@ -1,0 +1,6 @@
+<script type="javascript" tal:content="string:var object_archived = ${view/is_archived};;">
+</script>
+<form style="display:none" id="unarchive_object_form" method="POST" action="" 
+  tal:attributes="action string:${context/absolute_url}/@@unarchive_content">
+  <input type="submit" />
+</form>

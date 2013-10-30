@@ -23,6 +23,39 @@ class ObjectArchivedAnnotationStorage(Persistent):
         """Is this object archived?"""
         return bool(getattr(self, 'archive_date', False))
 
+    def unarchive(self, context, request):
+        """ Unarchive the object
+        """
+        noLongerProvides(context, IObjectArchived)
+
+        now = DateTime()
+        context.setExpirationDate(None)
+
+        wftool = getToolByName(context, 'portal_workflow')
+        mtool = getToolByName(context, 'portal_membership')
+
+        state = wftool.getInfoFor(context, 'review_state')
+        actor = mtool.getAuthenticatedMember().getId()
+
+        comments = (u"Unarchive by %(actor)s on %(date)s" % {
+                        'actor':actor,
+                        'date':now.ISO8601(),
+                    })
+
+        for wfname in context.workflow_history.keys():
+            history = context.workflow_history[wfname]
+            history += ({
+                'action':'UnArchive',
+                'review_state':state,
+                'actor':actor,
+                'comments':comments,
+                'time':now,
+                },)
+            context.workflow_history[wfname] = history
+
+        context.workflow_history._p_changed = True
+        context.reindexObject()
+
     def archive(self, context, initiator=None, reason=None, custom_message=None):
         """Archive the object"""
 

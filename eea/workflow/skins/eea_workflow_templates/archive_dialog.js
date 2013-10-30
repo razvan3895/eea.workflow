@@ -1,3 +1,6 @@
+// how do we know if an object is archived? If the archived viewlet shows up
+// we can add a new viewlet that sets the window.object_archived variable
+// TODO: add the Unarchive action
 function ArchiveDialog(){
     this.install();
 }
@@ -11,15 +14,23 @@ ArchiveDialog.prototype.install = function(){
         var $advanced = $("#workflow-transition-policy").parent();
     }
     var $archive = $advanced.clone();
-    $archive.removeClass('actionSeparator').find('a').attr('id', 'workflow-transition-archive').find('span').text('Archive...');
+    if (typeof window.object_archived == 'undefined') {
+        $archive.removeClass('actionSeparator').find('a').attr('id', 'workflow-transition-archive').find('span').text('Archive...');
+    } else {
+        $archive.removeClass('actionSeparator').find('a').attr('id', 'workflow-transition-unarchive').find('span').text('Unarchive');
+    }
     $advanced.before($archive);
 
-    var handler = self.onclick(self);
-    $("#workflow-transition-archive").on('click', handler);
-    $("#workflow-transition-archive span").on('click', handler);
+    var archive_handler = self.onclick_archive(self);
+    $("#workflow-transition-archive").on('click', archive_handler);
+    $("#workflow-transition-archive span").on('click', archive_handler);
+
+    var unarchive_handler = self.onclick_unarchive(self);
+    $("#workflow-transition-unarchive").on('click', unarchive_handler);
+    $("#workflow-transition-unarchive span").on('click', unarchive_handler);
 };
 
-ArchiveDialog.prototype.onclick = function(self, e){
+ArchiveDialog.prototype.onclick_archive = function(self, e){
     // this is a partial function, it curries the self object
     // it is needed because jquery event object are detached from the OOP object
     if (typeof(e) === "undefined") {
@@ -27,6 +38,24 @@ ArchiveDialog.prototype.onclick = function(self, e){
             self.open_dialog(self);
             return false;
         };
+    }
+};
+
+ArchiveDialog.prototype.onclick_unarchive = function(self, e){
+    // this is a partial function, it curries the self object
+    // it is needed because jquery event object are detached from the OOP object
+    if (typeof(e) === "undefined") {
+        return function(e){
+            self.unarchive(self);
+            return false;
+        };
+    }
+};
+
+ArchiveDialog.prototype.unarchive = function(){
+    var confirm = confirm("Are you sure you want to unarchive this?");
+    if (confirm) {
+        $("#unarchive_object_form").submit();
     }
 };
 

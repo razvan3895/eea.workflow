@@ -1,9 +1,10 @@
 """ Viewlets
 """
 
-from plone.app.layout.viewlets.common import ViewletBase
-from eea.workflow.interfaces import IObjectArchivator
 from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
+from eea.workflow.interfaces import IObjectArchivator
+from eea.workflow.interfaces import IObjectArchived
+from plone.app.layout.viewlets.common import ViewletBase
 
 
 class ArchiveViewlet(ViewletBase):
@@ -24,3 +25,13 @@ class ArchiveViewlet(ViewletBase):
                             custom_message=info.custom_message)
 
         self.info = archive_info
+
+
+class UnArchiveViewlet(ViewletBase):
+    """ Viewlet to unarchive content
+    """
+    is_archived = ""
+
+    def update(self):
+        self.is_archived = IObjectArchived.providedBy(self.context) \
+                                and "true" or "false";

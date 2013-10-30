@@ -27,9 +27,24 @@
         class=".archive.ArchiveContent"
         />
 
+    <browser:page
+        name="unarchive_content"
+        for="*"
+        permission="cmf.ModifyPortalContent"
+        class=".archive.UnArchiveContent"
+        />
 
     <browser:resource name='asyncworkflow.js'
         file='asyncworkflow.js' />
+
+    <browser:viewlet
+        name="eea.workflow.unarchive"
+        for="*"
+        manager="plone.app.layout.viewlets.interfaces.IPortalHeader"
+        template="unarchive.pt"
+        permission="zope.Public"
+        class=".viewlets.UnArchiveViewlet"
+        />
 
     <browser:viewlet
         name="eea.workflow.archived"

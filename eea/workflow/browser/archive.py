@@ -3,6 +3,7 @@
 
 from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
 from Products.Five import BrowserView
+from Products.statusmessages.interfaces import IStatusMessage
 from eea.workflow.interfaces import IObjectArchivator
 
 
@@ -32,6 +33,19 @@ class ArchiveContent(BrowserView):
         return "OK"
 
 
+class UnArchiveContent(BrowserView):
+    """ UnArchive the context object
+    """
+
+    def __call__(self, **kwargs):
+        storage = IObjectArchivator(self.context)
+        storage.unarchive(self.context)
+        msg = "Object has been unarchived"
+        IStatusMessage(context.REQUEST).add(msg, 'info')
+
+        return self.request.response.redirect(self.context.absolute_url())
+
+
 class ArchiveStatus(BrowserView):
     """ Show the same info as the archive status viewlet
     """
@@ -51,4 +65,3 @@ class ArchiveStatus(BrowserView):
                             custom_message=info.custom_message)
 
         return archive_info
-
