@@ -41,7 +41,7 @@ class UnArchiveContent(BrowserView):
         storage = IObjectArchivator(self.context)
         storage.unarchive(self.context)
         msg = "Object has been unarchived"
-        IStatusMessage(context.REQUEST).add(msg, 'info')
+        IStatusMessage(self.context.REQUEST).add(msg, 'info')
 
         return self.request.response.redirect(self.context.absolute_url())
 

@@ -9,7 +9,7 @@ from eea.workflow.interfaces import IObjectArchived, IObjectArchivator
 from persistent import Persistent
 from zope.annotation.factory import factory
 from zope.component import adapts
-from zope.interface import implements, alsoProvides
+from zope.interface import implements, alsoProvides, noLongerProvides
 
 
 class ObjectArchivedAnnotationStorage(Persistent):
@@ -23,7 +23,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
         """Is this object archived?"""
         return bool(getattr(self, 'archive_date', False))
 
-    def unarchive(self, context, request):
+    def unarchive(self, context):
         """ Unarchive the object
         """
         noLongerProvides(context, IObjectArchived)
@@ -37,7 +37,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
         state = wftool.getInfoFor(context, 'review_state')
         actor = mtool.getAuthenticatedMember().getId()
 
-        comments = (u"Unarchive by %(actor)s on %(date)s" % {
+        comments = (u"Unarchived by %(actor)s on %(date)s" % {
                         'actor':actor,
                         'date':now.ISO8601(),
                     })

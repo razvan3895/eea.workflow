@@ -14,7 +14,8 @@ ArchiveDialog.prototype.install = function(){
         var $advanced = $("#workflow-transition-policy").parent();
     }
     var $archive = $advanced.clone();
-    if (typeof window.object_archived == 'undefined') {
+    console.log(window.object_archived);
+    if (!window.object_archived) {
         $archive.removeClass('actionSeparator').find('a').attr('id', 'workflow-transition-archive').find('span').text('Archive...');
     } else {
         $archive.removeClass('actionSeparator').find('a').attr('id', 'workflow-transition-unarchive').find('span').text('Unarchive');
@@ -53,8 +54,8 @@ ArchiveDialog.prototype.onclick_unarchive = function(self, e){
 };
 
 ArchiveDialog.prototype.unarchive = function(){
-    var confirm = confirm("Are you sure you want to unarchive this?");
-    if (confirm) {
+    var c = confirm("Are you sure you want to unarchive this?");
+    if (c) {
         $("#unarchive_object_form").submit();
     }
 };
@@ -128,6 +129,8 @@ ArchiveDialog.Window.prototype.handle_ok = function(e){
         $.get(context_url+"/@@eea.workflow.archived", function(dom){
             $('.archive_status').remove();
             $("#plone-document-byline").after(dom);
+            window.object_archived = true;
+            new ArchiveDialog();
         });
     });
 
