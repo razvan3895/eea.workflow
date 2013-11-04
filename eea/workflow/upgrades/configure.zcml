@@ -33,4 +33,16 @@
 
   </genericsetup:upgradeSteps>
 
+  <genericsetup:upgradeSteps
+    source="*"
+    destination="6.6"
+    profile="eea.workflow:default">
+
+    <genericsetup:upgradeDepends
+      title="Import the Javascript registry"
+      import_steps="jsregistry"
+      />
+
+  </genericsetup:upgradeSteps>
+
 </configure>

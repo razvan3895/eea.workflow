@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <metadata>
   <description>EEA Workflow profile</description>
-  <version>6.2</version>
+  <version>6.6</version>
   <dependencies>
     <dependency>profile-Products.ATVocabularyManager:default</dependency>
     <dependency>profile-eea.versions:default</dependency>
