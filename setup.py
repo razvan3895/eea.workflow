@@ -32,6 +32,7 @@ setup(name=NAME,
           'eea.versions',
           'eea.jquery',
           'collective.monkeypatcher',
+          'plone.protect',
       ],
       entry_points="""
       # -*- Entry points: -*-

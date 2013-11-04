@@ -5,6 +5,7 @@ from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from eea.workflow.interfaces import IObjectArchivator
+from plone.protect import PostOnly
 
 
 class Reasons(BrowserView):
@@ -22,6 +23,7 @@ class ArchiveContent(BrowserView):
     """
 
     def __call__(self, **kwargs):
+        PostOnly(self.request)
         form = self.request.form
         values = {'initiator':      form.get('workflow_archive_initiator'),
                   'custom_message': 
@@ -38,6 +40,7 @@ class UnArchiveContent(BrowserView):
     """
 
     def __call__(self, **kwargs):
+        PostOnly(self.request)
         storage = IObjectArchivator(self.context)
         storage.unarchive(self.context)
         msg = "Object has been unarchived"

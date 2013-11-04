@@ -83,3 +83,20 @@ A view is used by the javascript to show information about the archive status wh
     >>> browser.open(doc_url + '/@@eea.workflow.archived')
     >>> 'Content is outdated' in browser.contents
     True
+
+There is also the possibility to unarchive the object:
+
+    >>> browser.post(doc_url + "/@@unarchive_content", '')
+    >>> IObjectArchivator.providedBy(doc)
+    False
+    >>> print doc.ExpirationDate()
+    None
+
+This leaves a record in the workflow_history:
+
+    >>> action = [entry for entry in doc.workflow_history['simple_publication_workflow'] if entry['action'] == 'UnArchive']
+    >>> print len(action)
+    1
+    >>> action = action[0]
+    >>> print action['comments']
+    Unarchived by portal_owner on ...
