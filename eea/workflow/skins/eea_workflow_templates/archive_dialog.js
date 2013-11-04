@@ -14,7 +14,6 @@ ArchiveDialog.prototype.install = function(){
         var $advanced = $("#workflow-transition-policy").parent();
     }
     var $archive = $advanced.clone();
-    console.log(window.object_archived);
     if (!window.object_archived) {
         $archive.removeClass('actionSeparator').find('a').attr('id', 'workflow-transition-archive').find('span').text('Archive...');
     } else {
