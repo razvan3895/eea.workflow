@@ -8,18 +8,27 @@ function ArchiveDialog(){
 ArchiveDialog.prototype.install = function(){
     /* Install the Archive transition as an action before the Advanced link */
     var self = this;
-    
-    var $advanced = $("#workflow-transition-advanced").parent();
-    if ($advanced.length === 0){
-        var $advanced = $("#workflow-transition-policy").parent();
-    }
-    var $archive = $advanced.clone();
+
+    var $state_menu = $("#plone-contentmenu-workflow");
+    if (!$state_menu.length) return;
+
+    var $archive_action;
     if (!window.object_archived) {
-        $archive.removeClass('actionSeparator').find('a').attr('id', 'workflow-transition-archive').find('span').text('Archive...');
+        $archive_action = $("<li>").append($("<a>").attr("id", "workflow-transition-archive").html("Archive..."));
     } else {
-        $archive.removeClass('actionSeparator').find('a').attr('id', 'workflow-transition-unarchive').find('span').text('Unarchive');
+        $archive_action = $("<li>").append($("<a>").attr("id", "workflow-transition-unarchive").html("UnArchive..."));
     }
-    $advanced.before($archive);
+
+    var is_minimal =  $state_menu.find("dd").length;
+    if (is_minimal) {
+        $state_menu.append($("<dd>").addClass("actionMenuContent").append($("<ul>").append($archive_action)));
+    } else {
+        var $advanced = $("#workflow-transition-advanced").parent();
+        if ($advanced.length === 0){
+            var $advanced = $("#workflow-transition-policy").parent();
+        }
+        $advanced.before($archive_action);
+    }
 
     var archive_handler = self.onclick_archive(self);
     $("#workflow-transition-archive").on('click', archive_handler);

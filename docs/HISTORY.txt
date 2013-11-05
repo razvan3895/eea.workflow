@@ -8,6 +8,9 @@ Changelog
   [tiberich #17303]
 * Bug fix: allow unarchiving, the reverse of the archiving operation
   [tiberich #17302]
+* Bug fix: refactor the way the workflow menu is constructed when adding the
+  Archive/Unarchive actions
+  [tiberich #17374]
 
 6.5 - (2013-10-22)
 ------------------
