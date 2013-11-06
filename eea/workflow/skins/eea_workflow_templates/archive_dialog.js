@@ -1,6 +1,3 @@
-// how do we know if an object is archived? If the archived viewlet shows up
-// we can add a new viewlet that sets the window.object_archived variable
-// TODO: add the Unarchive action
 function ArchiveDialog(){
     this.install();
 }
@@ -10,24 +7,28 @@ ArchiveDialog.prototype.install = function(){
     var self = this;
 
     var $state_menu = $("#plone-contentmenu-workflow");
-    if (!$state_menu.length) return;
+    if ($state_menu.length == 0) return;
 
     var $archive_action;
     if (!window.object_archived) {
-        $archive_action = $("<li>").append($("<a>").attr("id", "workflow-transition-archive").html("Archive..."));
+        $archive_action = $("<a>").attr({href:'#', "id":"workflow-transition-archive"}).html("<span class='subMenuTitle'>Archive...</span>");
     } else {
-        $archive_action = $("<li>").append($("<a>").attr("id", "workflow-transition-unarchive").html("UnArchive..."));
+        $archive_action = $("<a>").attr({href:'#', "id":"workflow-transition-unarchive"}).html("<span class='subMenuTitle'>UnArchive...</span>");
     }
 
     var is_minimal =  $state_menu.find("dd").length;
-    if (is_minimal) {
-        $state_menu.append($("<dd>").addClass("actionMenuContent").append($("<ul>").append($archive_action)));
+    if (is_minimal == 0) {
+        $("#contentActionMenus").prepend(
+                $("<dl>").addClass("actionMenu deactivated").append(
+                    $("<dt>").addClass("actionMenuHeader").append(
+                        $("<span>").append($archive_action))
+                ));
     } else {
         var $advanced = $("#workflow-transition-advanced").parent();
         if ($advanced.length === 0){
             var $advanced = $("#workflow-transition-policy").parent();
         }
-        $advanced.before($archive_action);
+        $advanced.before($("<li>").append($archive_action));
     }
 
     var archive_handler = self.onclick_archive(self);
