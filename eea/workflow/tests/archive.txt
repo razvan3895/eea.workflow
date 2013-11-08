@@ -100,3 +100,14 @@ This leaves a record in the workflow_history:
     >>> action = action[0]
     >>> print action['comments']
     Unarchived by portal_owner on ...
+
+Archive form includes `workflow_archive_recurse` parameter as checkbox;
+when truthy, it archives folderish object and all subobjects:
+
+    >>> folder_url = folder.absolute_url()
+    >>> postdata = 'workflow_archive_recurse=on'
+    >>> browser.post("%s/@@archive_content" % folder_url, postdata)
+    >>> IObjectArchived.providedBy(folder)
+    True
+    >>> IObjectArchived.providedBy(doc)
+    True

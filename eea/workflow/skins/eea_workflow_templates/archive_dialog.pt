@@ -11,6 +11,10 @@
   <input name="workflow_reasons_radio" type="radio" value="other"/> Other:
   <input name="workflow_other_reason" type="text" placeholder="custom message"/><br/>
 
+  <h3 id="workflow_target_label">Target:</h3>
+  <input name="workflow_archive_recurse" type="checkbox" checked="checked" value="on"
+         id="workflow_archive_recurse" />
+  <label for="workflow_archive_recurse">Apply archiving on all children/content of this object</label>
   <br/>
   <h3 id="workflow_initiator_label">Request Initiator:</h3>
   <label>Staff name who initially requested and/or approved this page to be archived/expired.</label>

@@ -1,7 +1,9 @@
 """ Archival views
 """
 
+from Products.Archetypes.interfaces import IBaseObject
 from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
+from Products.CMFPlone.utils import getToolByName
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from eea.workflow.interfaces import IObjectArchivator
@@ -25,13 +27,27 @@ class ArchiveContent(BrowserView):
     def __call__(self, **kwargs):
         PostOnly(self.request)
         form = self.request.form
-        values = {'initiator':      form.get('workflow_archive_initiator'),
-                  'custom_message': 
-                    form.get('workflow_other_reason', '').strip(),
-                  'reason':         form.get('workflow_reasons_radio', 'other')
-                  }
-        storage = IObjectArchivator(self.context)
-        storage.archive(self.context, **values)
+        recurse = form.get('workflow_archive_recurse', False)
+        values = {'initiator': form.get('workflow_archive_initiator'),
+                  'custom_message':
+                                  form.get('workflow_other_reason', '').strip(),
+                  'reason': form.get('workflow_reasons_radio', 'other'),
+                 }
+
+        if recurse:
+            catalog = getToolByName(self.context, 'portal_catalog')
+            query = {'path': '/'.join(self.context.getPhysicalPath())}
+            brains = catalog.searchResults(query)
+
+            for brain in brains:
+                obj = brain.getObject()
+                if IBaseObject.providedBy(obj):
+                    storage = IObjectArchivator(obj)
+                    storage.archive(obj, **values)
+        else:
+            storage = IObjectArchivator(self.context)
+            storage.archive(self.context, **values)
+
         return "OK"
 
 

@@ -91,7 +91,7 @@ ArchiveDialog.Window.prototype.open = function(){
         modal:true,
         resizable:true,
         width:600,
-        height:400,
+        height:420,
         open:function(ui){self._open(ui);},
         buttons:{
             'Ok':function(e){self.handle_ok(e);},

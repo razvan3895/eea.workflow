@@ -15,7 +15,7 @@ from zope.interface import implements, alsoProvides, noLongerProvides
 class ObjectArchivedAnnotationStorage(Persistent):
     """ The IObjectArchived information stored as annotation
     """
-    implements (IObjectArchivator)
+    implements(IObjectArchivator)
     adapts(IBaseObject)
 
     @property
@@ -59,6 +59,11 @@ class ObjectArchivedAnnotationStorage(Persistent):
     def archive(self, context, initiator=None, reason=None, custom_message=None):
         """Archive the object"""
 
+        wftool = getToolByName(context, 'portal_workflow')
+        has_workflow = wftool.getChainFor(context)
+        if not has_workflow:
+            # NOP
+            return
         now = DateTime()
         alsoProvides(context, IObjectArchived)
         context.setExpirationDate(now)
@@ -68,10 +73,8 @@ class ObjectArchivedAnnotationStorage(Persistent):
         self.custom_message = custom_message
         self.reason         = reason
 
-        wftool = getToolByName(context, 'portal_workflow')
-        mtool = getToolByName(context, 'portal_membership')
-
         state = wftool.getInfoFor(context, 'review_state')
+        mtool = getToolByName(context, 'portal_membership')
         actor = mtool.getAuthenticatedMember().getId()
 
         rv = NamedVocabulary('eea.workflow.reasons')
