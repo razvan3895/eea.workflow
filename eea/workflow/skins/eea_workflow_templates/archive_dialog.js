@@ -45,7 +45,7 @@ ArchiveDialog.prototype.onclick_archive = function(self, e){
     // it is needed because jquery event object are detached from the OOP object
     if (typeof(e) === "undefined") {
         return function(e){
-            self.open_dialog(self);
+            self.open_dialog(self, "archive");
             return false;
         };
     }
@@ -56,22 +56,30 @@ ArchiveDialog.prototype.onclick_unarchive = function(self, e){
     // it is needed because jquery event object are detached from the OOP object
     if (typeof(e) === "undefined") {
         return function(e){
-            self.unarchive(self);
+            self.open_dialog(self, "unarchive");
             return false;
         };
     }
 };
 
-ArchiveDialog.prototype.unarchive = function(){
-    var c = confirm("Are you sure you want to unarchive this?");
-    if (c) {
-        $("#unarchive_object_form").submit();
-    }
-};
+// TODO: REMOVE
+//ArchiveDialog.prototype.unarchive = function(){
+//    var c = confirm("Are you sure you want to unarchive this?");
+//    if (c) {
+//        $("#unarchive_object_form").submit();
+//    }
+//};
 
-ArchiveDialog.prototype.open_dialog = function(){
+ArchiveDialog.prototype.open_dialog = function(self, action_type){
     var w = new ArchiveDialog.Window();
-    w.open();
+    switch(action_type){
+        case "archive":
+            w.open_archive();
+            break;
+        case "unarchive":
+            w.open_unarchive();
+            break;
+    }
 };
 
 ArchiveDialog.Window = function(){
@@ -82,7 +90,7 @@ ArchiveDialog.Window = function(){
     this.target = $target;
 };
 
-ArchiveDialog.Window.prototype.open = function(){
+ArchiveDialog.Window.prototype.open_archive = function(){
     $("dl.activated").removeClass('activated');
     var self = this;
     self.dialog = jQuery(this.target).dialog({
@@ -92,9 +100,28 @@ ArchiveDialog.Window.prototype.open = function(){
         resizable:true,
         width:600,
         height:420,
-        open:function(ui){self._open(ui);},
+        open:function(ui){self._open_archive(ui);},
         buttons:{
-            'Ok':function(e){self.handle_ok(e);},
+            'Ok':function(e){self.handle_ok_archive(e);},
+        'Cancel':function(e){self.handle_cancel(e);}
+        }
+    }
+    );
+};
+
+ArchiveDialog.Window.prototype.open_unarchive = function(){
+    $("dl.activated").removeClass('activated');
+    var self = this;
+    self.dialog = jQuery(this.target).dialog({
+        title:"UnArchive content",
+        dialogClass:'archiveDialog',
+        modal:true,
+        resizable:true,
+        width: 500,
+        height: 260,
+        open:function(ui){self._open_unarchive(ui);},
+        buttons:{
+            'Ok':function(e){self.handle_ok_unarchive(e);},
         'Cancel':function(e){self.handle_cancel(e);}
         }
     }
@@ -105,7 +132,7 @@ ArchiveDialog.Window.prototype.handle_cancel = function(e){
     this.dialog.dialog("close");
 };
 
-ArchiveDialog.Window.prototype.handle_ok = function(e){
+ArchiveDialog.Window.prototype.handle_ok_archive = function(e){
     var self = this;
     jQuery('.notice').remove();
     var workflow_reason = jQuery("input[name='workflow_reasons_radio']:checked").val();
@@ -146,17 +173,40 @@ ArchiveDialog.Window.prototype.handle_ok = function(e){
     return false;
 };
 
+ArchiveDialog.Window.prototype.handle_ok_unarchive = function(e){
+    var self = this;
+    var $form = jQuery("form", this.target);
+    $.post($form.attr('action'), $form.serialize(), function(res){
+        self.dialog.dialog("close");
+        $("#workflow-transition-unarchive").remove();
+        $('.archive_status').remove();
+        window.object_archived = false;
+        new ArchiveDialog();
+    });
+
+    return false;
+};
+
 function get_base(){
     var base = (window.context_url || jQuery("base").attr('href') || document.baseURI ||
                 window.location.href.split("?")[0].split('@@')[0]);
     return base;
 }
 
-ArchiveDialog.Window.prototype._open = function(ui){
+ArchiveDialog.Window.prototype._open_archive = function(ui){
     var self = this;
 
     var base = get_base();
     var url = base + "/archive_dialog";
+
+    jQuery(self.target).load(url, function(){});
+};
+
+ArchiveDialog.Window.prototype._open_unarchive = function(ui){
+    var self = this;
+
+    var base = get_base();
+    var url = base + "/unarchive_dialog";
 
     jQuery(self.target).load(url, function(){});
 };

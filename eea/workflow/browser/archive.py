@@ -6,7 +6,7 @@ from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
 from Products.CMFPlone.utils import getToolByName
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
-from eea.workflow.interfaces import IObjectArchivator
+from eea.workflow.interfaces import IObjectArchivator, IObjectArchived
 from plone.protect import PostOnly
 
 
@@ -41,9 +41,8 @@ class ArchiveContent(BrowserView):
 
             for brain in brains:
                 obj = brain.getObject()
-                if IBaseObject.providedBy(obj):
-                    storage = IObjectArchivator(obj)
-                    storage.archive(obj, **values)
+                storage = IObjectArchivator(obj)
+                storage.archive(obj, **values)
         else:
             storage = IObjectArchivator(self.context)
             storage.archive(self.context, **values)
@@ -57,9 +56,24 @@ class UnArchiveContent(BrowserView):
 
     def __call__(self, **kwargs):
         PostOnly(self.request)
-        storage = IObjectArchivator(self.context)
-        storage.unarchive(self.context)
-        msg = "Object has been unarchived"
+        form = self.request.form
+        recurse = form.get('workflow_unarchive_recurse', False)
+        if recurse:
+            catalog = getToolByName(self.context, 'portal_catalog')
+            query = {'path': '/'.join(self.context.getPhysicalPath())}
+            brains = catalog.searchResults(query)
+
+            for brain in brains:
+                obj = brain.getObject()
+                if IObjectArchived.providedBy(obj):
+                    storage = IObjectArchivator(obj)
+                    storage.unarchive(obj)
+            msg = "Object and contents have been unarchived"
+        else:
+            storage = IObjectArchivator(self.context)
+            storage.unarchive(self.context)
+            msg = "Object has been unarchived"
+
         IStatusMessage(self.context.REQUEST).add(msg, 'info')
 
         return self.request.response.redirect(self.context.absolute_url())

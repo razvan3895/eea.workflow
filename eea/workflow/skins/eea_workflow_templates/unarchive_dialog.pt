@@ -1,0 +1,9 @@
+<form method="POST" action="" tal:attributes="action string:${context/absolute_url}/@@unarchive_content">
+  <h3 id="unarchive-confirm">UnArchive Object</h3>
+  <p>Are you sure you want to unarchive this?</p>
+  <h3 id="workflow_unarchive_target_label">Target:</h3>
+  <input name="workflow_unarchive_recurse" type="checkbox" checked="checked" value="on"
+         id="workflow_unarchive_recurse" />
+  <label for="workflow_unarchive_recurse">Also unarchive all archived children/content of this object, if any</label>
+  <br/>
+</form>
