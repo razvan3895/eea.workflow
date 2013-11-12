@@ -6,4 +6,7 @@
          id="workflow_unarchive_recurse" />
   <label for="workflow_unarchive_recurse">Also unarchive all archived children/content of this object, if any</label>
   <br/>
+  <div style="text-align: center; display: none" id="unarchiving_preloader">
+    <img tal:attributes="src string:${context/absolute_url}/eea-workflow-ajax-loader.gif" style="margin: 0px auto;" />
+  </div>
 </form>

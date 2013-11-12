@@ -96,7 +96,7 @@ ArchiveDialog.Window.prototype.open_archive = function () {
         modal: true,
         resizable: true,
         width: 600,
-        height: 420,
+        height: 450,
         open: function (ui) { self._open_archive(ui); },
         buttons: {
             'Ok': function (e) { self.handle_ok_archive(e); },
@@ -133,7 +133,8 @@ ArchiveDialog.Window.prototype.handle_ok_archive = function (e) {
     var self = this,
         $form,
         workflow_reason = jQuery("input[name='workflow_reasons_radio']:checked").val(),
-        hasErrors = false;
+        hasErrors = false,
+        preloader;
     jQuery('.notice').remove();
     if (!workflow_reason) {
         jQuery("#workflow_reason_label").after("<div class='notice' style='color:Black; background-color:#FFE291; " +
@@ -156,12 +157,15 @@ ArchiveDialog.Window.prototype.handle_ok_archive = function (e) {
                 function () { jQuery('.notice').remove(); });
         return;
     }
+    $("#archiving_preloader").show();
+    
     $form = jQuery("form", this.target);
     $.post($form.attr('action'), $form.serialize(), function (res) {
+        $('.archive_status').remove();
         self.dialog.dialog("close");
         $("#workflow-transition-archive").remove();
+        $("#archiving_preloader").hide();
         $.get(context_url+"/@@eea.workflow.archived", function (dom) {
-            $('.archive_status').remove();
             $("#plone-document-byline").after(dom);
             window.object_archived = true;
             new ArchiveDialog();
@@ -174,7 +178,9 @@ ArchiveDialog.Window.prototype.handle_ok_archive = function (e) {
 ArchiveDialog.Window.prototype.handle_ok_unarchive = function (e) {
     var self = this,
         $form = jQuery("form", this.target);
+    $("#unarchiving_preloader").show();
     $.post($form.attr('action'), $form.serialize(), function (res) {
+        $("#unarchiving_preloader").remove();
         self.dialog.dialog("close");
         $("#workflow-transition-unarchive").remove();
         $('.archive_status').remove();
