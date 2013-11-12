@@ -1,7 +1,6 @@
 """ Archival views
 """
 
-from Products.Archetypes.interfaces import IBaseObject
 from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
 from Products.CMFPlone.utils import getToolByName
 from Products.Five import BrowserView
@@ -28,11 +27,10 @@ class ArchiveContent(BrowserView):
         PostOnly(self.request)
         form = self.request.form
         recurse = form.get('workflow_archive_recurse', False)
-        values = {'initiator': form.get('workflow_archive_initiator'),
-                  'custom_message':
-                                  form.get('workflow_other_reason', '').strip(),
-                  'reason': form.get('workflow_reasons_radio', 'other'),
-                 }
+        val = {'initiator': form.get('workflow_archive_initiator'),
+               'custom_message': form.get('workflow_other_reason', '').strip(),
+               'reason': form.get('workflow_reasons_radio', 'other'),
+        }
 
         if recurse:
             catalog = getToolByName(self.context, 'portal_catalog')
@@ -42,10 +40,12 @@ class ArchiveContent(BrowserView):
             for brain in brains:
                 obj = brain.getObject()
                 storage = IObjectArchivator(obj)
-                storage.archive(obj, **values)
+                storage.archive(obj, initiator=val['initiator'],
+                     custom_message=val['custom_message'], reason=val['reason'])
         else:
             storage = IObjectArchivator(self.context)
-            storage.archive(self.context, **values)
+            storage.archive(self.context, initiator=val['initiator'],
+                     custom_message=val['custom_message'], reason=val['reason'])
 
         return "OK"
 
