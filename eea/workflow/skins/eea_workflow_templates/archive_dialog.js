@@ -1,5 +1,5 @@
 /*globals $, window, document, context_url */
-$(document).ready(function () {
+$(function () {
     "use strict";
     var $archive_action,
         is_minimal,
@@ -11,12 +11,14 @@ $(document).ready(function () {
         Window,
         install;
 
-    archive_handler = function () {
+    archive_handler = function (e) {
+        e.preventDefault();
         open_dialog("archive");
         return false;
     };
 
-    unarchive_handler = function () {
+    unarchive_handler = function (e) {
+        e.preventDefault();
         open_dialog("unarchive");
         return false;
     };
@@ -107,24 +109,22 @@ $(document).ready(function () {
             if (hasErrors) {
                 $(".notice").effect("pulsate", {times: 3}, 2000,
                         function () { $('.notice').remove(); });
-                return;
-            }
-            $("#archiving_preloader").show();
+            } else {
+                $("#archiving_preloader").show();
 
-            $form = $("form", $target);
-            $.post($form.attr('action'), $form.serialize(), function () {
-                $('.archive_status').remove();
-                dialog.dialog("close");
-                $("#workflow-transition-archive").remove();
-                $("#archiving_preloader").hide();
-                $.get(context_url + "/@@eea.workflow.archived", function (dom) {
-                    $("#plone-document-byline").after(dom);
-                    window.object_archived = true;
-                    install();
+                $form = $("form", $target);
+                $.post($form.attr('action'), $form.serialize(), function () {
+                    $('.archive_status').remove();
+                    dialog.dialog("close");
+                    $("#workflow-transition-archive").remove();
+                    $("#archiving_preloader").hide();
+                    $.get(context_url + "/@@eea.workflow.archived", function (dom) {
+                        $("#plone-document-byline").after(dom);
+                        window.object_archived = true;
+                        install();
+                    });
                 });
-            });
-
-            return false;
+            }
         };
 
         handle_ok_unarchive = function () {
@@ -138,8 +138,6 @@ $(document).ready(function () {
                 window.object_archived = false;
                 install();
             });
-
-            return false;
         };
 
         function get_base() {
@@ -169,7 +167,7 @@ $(document).ready(function () {
 
     install = function () {
         if ($state_menu.length === 0) {
-            return;
+            return false;
         }
 
         if (!window.object_archived) {
@@ -200,6 +198,7 @@ $(document).ready(function () {
 
         $("#workflow-transition-unarchive").on('click', unarchive_handler);
         $("#workflow-transition-unarchive span").on('click', unarchive_handler);
+        return true;
     };
 
     install();
