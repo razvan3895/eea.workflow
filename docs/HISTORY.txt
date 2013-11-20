@@ -9,7 +9,7 @@ Changelog
 
 6.6 - (2013-11-06)
 ------------------
-* Bug fix: also define get_base in archive_dialog.js as publish_dialog.js is 
+* Bug fix: also define get_base in archive_dialog.js as publish_dialog.js is
   not always loaded
   [tiberich #17303]
 * Bug fix: allow unarchiving, the reverse of the archiving operation
