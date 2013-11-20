@@ -1,8 +1,8 @@
 Changelog
 =========
 
-6.7-dev - (unreleased)
-----------------------
+6.7 - (2013-11-20)
+------------------
 * Feature: include option to archive/unarchive all subobjects/content
   of folderish object
   [simiamih #17382]
