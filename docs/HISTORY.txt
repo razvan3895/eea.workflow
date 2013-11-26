@@ -3,6 +3,7 @@ Changelog
 
 6.8-dev - (unreleased)
 ----------------------
+* trying usage of queryAdapter for pylint validation [simiamih]
 
 6.7 - (2013-11-20)
 ------------------

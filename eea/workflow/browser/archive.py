@@ -6,6 +6,7 @@ from Products.CMFPlone.utils import getToolByName
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from eea.workflow.interfaces import IObjectArchivator, IObjectArchived
+from zope.component import queryAdapter
 from plone.protect import PostOnly
 
 
@@ -39,11 +40,10 @@ class ArchiveContent(BrowserView):
 
             for brain in brains:
                 obj = brain.getObject()
-                storage = IObjectArchivator(obj)
-                storage.archive(obj, initiator=val['initiator'],
-                     custom_message=val['custom_message'], reason=val['reason'])
+                storage = queryAdapter(obj, IObjectArchivator)
+                storage.archive(obj, **val)
         else:
-            storage = IObjectArchivator(self.context)
+            storage = queryAdapter(self.context, IObjectArchivator)
             storage.archive(self.context, initiator=val['initiator'],
                      custom_message=val['custom_message'], reason=val['reason'])
 
@@ -66,11 +66,11 @@ class UnArchiveContent(BrowserView):
             for brain in brains:
                 obj = brain.getObject()
                 if IObjectArchived.providedBy(obj):
-                    storage = IObjectArchivator(obj)
+                    storage = queryAdapter(obj, IObjectArchivator)
                     storage.unarchive(obj)
             msg = "Object and contents have been unarchived"
         else:
-            storage = IObjectArchivator(self.context)
+            storage = queryAdapter(self.context, IObjectArchivator)
             storage.unarchive(self.context)
             msg = "Object has been unarchived"
 
