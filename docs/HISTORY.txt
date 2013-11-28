@@ -3,7 +3,10 @@ Changelog
 
 6.8-dev - (unreleased)
 ----------------------
-* trying usage of queryAdapter for pylint validation [simiamih]
+* Change: trying usage of queryAdapter for pylint validation
+  [simiamih #17382]
+* Feature: updated .gitignore
+  [ghicaale]
 
 6.7 - (2013-11-20)
 ------------------
