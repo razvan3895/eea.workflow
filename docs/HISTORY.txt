@@ -3,6 +3,9 @@ Changelog
 
 6.8-dev - (unreleased)
 ----------------------
+* Change: make archived portal message more visible by
+  using attentionMessage icon
+  [demarant]
 * Change: trying usage of queryAdapter for pylint validation
   [simiamih #17382]
 * Feature: updated .gitignore
