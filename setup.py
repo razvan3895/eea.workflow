@@ -33,6 +33,7 @@ setup(name=NAME,
           'eea.jquery',
           'collective.monkeypatcher',
           'plone.protect',
+          'Products.ATVocabularyManager',
       ],
       entry_points="""
       # -*- Entry points: -*-

@@ -3,6 +3,8 @@ Changelog
 
 6.8-dev - (unreleased)
 ----------------------
+* Bug fix: Add missing dependency to ATVocabularyManager
+  [avoinea]
 * Change: make archived portal message more visible by
   using attentionMessage icon
   [demarant]
