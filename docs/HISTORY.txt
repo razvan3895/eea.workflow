@@ -3,6 +3,8 @@ Changelog
 
 6.9-dev - (unreleased)
 ----------------------
+* Bug fix: EffectiveDate is no longer set to now() on publish
+  [ghicaale refs #9110]
 
 6.8 - (2013-12-10)
 ------------------

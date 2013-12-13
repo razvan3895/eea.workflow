@@ -8,6 +8,7 @@
 ##parameters=workflow_action=None, comment='', effective_date="_NOT_SET_", expiration_date="_NOT_SET_", *args
 ##title=handles the workflow transitions of objects
 ##
+
 from ZODB.POSException import ConflictError
 from DateTime import DateTime
 from Products.CMFPlone.utils import transaction_note
@@ -35,12 +36,6 @@ def editContent(obj, effective, expiry):
     if expiry != "_NOT_SET_":
         kwargs['expiration_date'] = expiry
     new_context.plone_utils.contentEdit( obj, **kwargs)
-
-# we force an effective date for the situation when items are published from folder_contents
-# bulk publishing
-if workflow_action == "publish" and \
-    ((not effective_date or effective_date == "_NOT_SET_") or effective_date == ''):
-    effective_date = DateTime()
 
 #You can transition content but not have the permission to ModifyPortalContent
 try:
