@@ -5,6 +5,8 @@ Changelog
 ----------------------
 * Bug fix: EffectiveDate is no longer set to now() on publish
   [ghicaale refs #9110]
+* Feature: adding Sphinx-generated documentation in Page Template format
+  [batradav refs #9502]
 
 6.8 - (2013-12-10)
 ------------------

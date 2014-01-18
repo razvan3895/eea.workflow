@@ -15,6 +15,7 @@
         preserveOriginal="true"
         />
 
+    <include file="documentation.zcml" />
     <include file="profiles.zcml" />
     <include file="skins.zcml" />
     <include package=".portlets" />
