@@ -1,6 +1,9 @@
 Changelog
 =========
 
+7.0-dev - (unreleased)
+----------------------
+
 6.9 - (2014-01-22)
 ------------------
 * Bug fix: EffectiveDate is no longer set to now() on publish
