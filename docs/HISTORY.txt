@@ -1,8 +1,8 @@
 Changelog
 =========
 
-6.9-dev - (unreleased)
-----------------------
+6.9 - (2014-01-22)
+------------------
 * Bug fix: EffectiveDate is no longer set to now() on publish
   [ghicaale refs #9110]
 * Feature: adding Sphinx-generated documentation in Page Template format
