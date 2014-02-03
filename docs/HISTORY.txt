@@ -1,8 +1,8 @@
 Changelog
 =========
 
-7.0-dev - (unreleased)
-----------------------
+7.0 - (2014-02-03)
+------------------
 * Change: archive/unarchive operations now trigger a cache purge
   [ichim-david refs #18155]
 
