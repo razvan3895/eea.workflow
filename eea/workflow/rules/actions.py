@@ -10,6 +10,7 @@ from plone.contentrules.rule.interfaces import IExecutable, IRuleElementData
 from plone.app.contentrules.browser.formhelper import AddForm as PloneAddForm
 from plone.app.contentrules.browser.formhelper import EditForm as PloneEditForm
 from eea.workflow.rules.interfaces import IArchiveUnarchiveAction
+from eea.workflow.interfaces import IObjectArchived, IObjectArchivator
 
 logger = logging.getLogger("eea.workflow.actions")
 
@@ -45,6 +46,15 @@ class ArchiveUnarchiveExecutor(object):
         action = self.element.action
         obj = self.event.object
 
+        adapter = IObjectArchivator(obj)
+        if action == "archived":
+            adapter.archive(obj, **dict(initiator='contentRules',
+                            reason='other', custom_message='new version '
+                                                           'published'))
+        else:
+            adapter.unarchive(obj, **dict(initiator='contentRules',
+                            reason='other', custom_message='Unarchived by'
+                                                           ' content rule'))
         logger.info("Object %s state is %s", obj.absolute_url(),
                     action)
         return True
