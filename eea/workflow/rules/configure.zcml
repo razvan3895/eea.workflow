@@ -5,5 +5,32 @@
 
   <include package="plone.contentrules" file="meta.zcml" />
   <include package="plone.app.contentrules" />
+  <adapter factory=".actions.ArchiveUnarchiveExecutor" />
+
+  <browser:page
+    name="eea.workflow.rules.actions.ArchiveUnarchiveAction"
+    for="plone.app.contentrules.browser.interfaces.IRuleActionAdding"
+    class=".actions.AddForm"
+    permission="plone.app.contentrules.ManageContentRules"
+  />
+
+  <browser:page
+    for="eea.workflow.rules.interfaces.IArchiveUnarchiveAction"
+    name="edit"
+    class=".actions.EditForm"
+    permission="plone.app.contentrules.ManageContentRules"
+  />
+
+  <plone:ruleAction
+    name="eea.workflow.rules.actions.archive_unarchive_objects"
+    title="Archive or unarchive object"
+    description="Archive or unarchive object"
+    for="*"
+    event="*"
+    addview="eea.workflow.rules.actions.ArchiveUnarchiveAction"
+    editview="edit"
+    schema=".interfaces.IArchiveUnarchiveAction"
+    factory=".actions.ArchiveUnarchiveAction"
+    />
 
 </configure>
