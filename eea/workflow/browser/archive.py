@@ -6,8 +6,6 @@ from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from zope.component import queryAdapter
 from plone.protect import PostOnly
-from zope.event import notify
-from z3c.caching.purge import Purge
 
 from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
 from eea.workflow.interfaces import IObjectArchivator, IObjectArchived
@@ -45,13 +43,11 @@ class ArchiveContent(BrowserView):
                 obj = brain.getObject()
                 storage = queryAdapter(obj, IObjectArchivator)
                 storage.archive(obj, **val)
-                notify(Purge(obj))
 
         else:
             storage = queryAdapter(self.context, IObjectArchivator)
             storage.archive(self.context, initiator=val['initiator'],
                      custom_message=val['custom_message'], reason=val['reason'])
-            notify(Purge(self.context))
 
         return "OK"
 
@@ -74,13 +70,11 @@ class UnArchiveContent(BrowserView):
                 if IObjectArchived.providedBy(obj):
                     storage = queryAdapter(obj, IObjectArchivator)
                     storage.unarchive(obj)
-                    notify(Purge(obj))
             msg = "Object and contents have been unarchived"
         else:
             storage = queryAdapter(self.context, IObjectArchivator)
             storage.unarchive(self.context)
             msg = "Object has been unarchived"
-            notify(Purge(self.context))
 
         IStatusMessage(self.context.REQUEST).add(msg, 'info')
 

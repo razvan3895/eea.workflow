@@ -10,6 +10,8 @@ from persistent import Persistent
 from zope.annotation.factory import factory
 from zope.component import adapts
 from zope.interface import implements, alsoProvides, noLongerProvides
+from zope.event import notify
+from z3c.caching.purge import Purge
 
 
 class ObjectArchivedAnnotationStorage(Persistent):
@@ -55,6 +57,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
 
         context.workflow_history._p_changed = True
         context.reindexObject()
+        notify(Purge(context))
 
     def archive(self, context, initiator=None, reason=None, custom_message=None):
         """Archive the object"""
@@ -105,6 +108,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
 
         context.workflow_history._p_changed = True
         context.reindexObject()
+        notify(Purge(context))
 
 
 archive_annotation_storage = factory(ObjectArchivedAnnotationStorage, key="eea.workflow.archive")

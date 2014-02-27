@@ -62,14 +62,16 @@ class ArchiveUnarchiveExecutor(object):
         if action == "archived":
             if self.element.affectPreviousVersion:
                 obj = IGetVersions(obj).versions()[-2]
+                adapter = IObjectArchivator(obj)
             adapter.archive(obj, **dict(initiator='contentRules',
-                            reason='other', custom_message='new version '
+                            reason='Other', custom_message='new version '
                                                            'published'))
         else:
             if self.element.affectPreviousVersion:
                 obj = IGetVersions(obj).versions()[-2]
+                adapter = IObjectArchivator(obj)
             adapter.unarchive(obj, **dict(initiator='contentRules',
-                            reason='other', custom_message='Unarchived by'
+                            reason='Other', custom_message='Unarchived by'
                                                            ' content rule'))
         logger.info("Object %s state is %s", obj.absolute_url(),
                     action)
