@@ -11,6 +11,8 @@ from plone.app.contentrules.browser.formhelper import AddForm as PloneAddForm
 from plone.app.contentrules.browser.formhelper import EditForm as PloneEditForm
 from eea.workflow.rules.interfaces import IArchiveUnarchiveAction
 from eea.workflow.interfaces import IObjectArchivator
+from eea.versions.interfaces import IGetVersions
+
 
 logger = logging.getLogger("eea.workflow.actions")
 
@@ -58,10 +60,14 @@ class ArchiveUnarchiveExecutor(object):
 
         adapter = IObjectArchivator(obj)
         if action == "archived":
+            if self.element.affectPreviousVersion:
+                obj = IGetVersions(obj).versions()[-2]
             adapter.archive(obj, **dict(initiator='contentRules',
                             reason='other', custom_message='new version '
                                                            'published'))
         else:
+            if self.element.affectPreviousVersion:
+                obj = IGetVersions(obj).versions()[-2]
             adapter.unarchive(obj, **dict(initiator='contentRules',
                             reason='other', custom_message='Unarchived by'
                                                            ' content rule'))
