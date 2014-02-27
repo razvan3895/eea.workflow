@@ -25,7 +25,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
         """Is this object archived?"""
         return bool(getattr(self, 'archive_date', False))
 
-    def unarchive(self, context):
+    def unarchive(self, context, custom_message=None):
         """ Unarchive the object
         """
         noLongerProvides(context, IObjectArchived)
@@ -39,7 +39,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
         state = wftool.getInfoFor(context, 'review_state')
         actor = mtool.getAuthenticatedMember().getId()
 
-        comments = (u"Unarchived by %(actor)s on %(date)s" % {
+        comments = custom_message or (u"Unarchived by %(actor)s on %(date)s" % {
                         'actor':actor,
                         'date':now.ISO8601(),
                     })
