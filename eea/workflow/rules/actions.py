@@ -10,7 +10,7 @@ from plone.contentrules.rule.interfaces import IExecutable, IRuleElementData
 from plone.app.contentrules.browser.formhelper import AddForm as PloneAddForm
 from plone.app.contentrules.browser.formhelper import EditForm as PloneEditForm
 from eea.workflow.rules.interfaces import IArchiveUnarchiveAction
-from eea.workflow.interfaces import IObjectArchived, IObjectArchivator
+from eea.workflow.interfaces import IObjectArchivator
 
 logger = logging.getLogger("eea.workflow.actions")
 
@@ -25,8 +25,18 @@ class ArchiveUnarchiveAction(SimpleItem):
 
     @property
     def summary(self):
+        apply_recursively = getattr(self, "applyRecursively")
+        affect_previous_version = getattr(self, "affectPreviousVersion")
+        msg_template = "%s will be: %s" % ("%s", self.action)
+        msg = msg_template % ("Object")
+        if apply_recursively:
+            msg = msg_template % ("Object and it's children")
+        if affect_previous_version:
+            msg = msg_template % ("Previous object revision")
+        if affect_previous_version and apply_recursively:
+            msg = msg_template % ("Previous object version and it's children")
         if self.action:
-            return "Object will be: %s" % self.action
+            return msg
         else:
             return "Not configured"
 
