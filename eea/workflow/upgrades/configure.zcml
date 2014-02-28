@@ -1,48 +1,60 @@
 <configure
-  xmlns="http://namespaces.zope.org/zope"
-  xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
-  i18n_domain="eea">
+        xmlns="http://namespaces.zope.org/zope"
+        xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+        i18n_domain="eea">
 
-  <genericsetup:upgradeSteps
-    source="*"
-    destination="4.0"
-    profile="eea.workflow:default">
+    <genericsetup:upgradeSteps
+            source="*"
+            destination="4.0"
+            profile="eea.workflow:default">
 
-    <genericsetup:upgradeDepends
-      title="Import all steps from eea.workflow profile"
-      import_profile="eea.workflow:default"
-      />
+        <genericsetup:upgradeDepends
+                title="Import all steps from eea.workflow profile"
+                import_profile="eea.workflow:default"
+                />
 
-  </genericsetup:upgradeSteps>
+    </genericsetup:upgradeSteps>
 
 
-  <genericsetup:upgradeSteps
-    source="*"
-    destination="6.2"
-    profile="eea.workflow:default">
+    <genericsetup:upgradeSteps
+            source="*"
+            destination="6.2"
+            profile="eea.workflow:default">
 
-    <genericsetup:upgradeDepends
-      title="Import the Javascript registry"
-      import_steps="jsregistry"
-      />
+        <genericsetup:upgradeDepends
+                title="Import the Javascript registry"
+                import_steps="jsregistry"
+                />
 
-    <genericsetup:upgradeDepends
-      title="Import vocabularies"
-      import_steps="eea-workflow-vocabularies"
-      />
+        <genericsetup:upgradeDepends
+                title="Import vocabularies"
+                import_steps="eea-workflow-vocabularies"
+                />
 
-  </genericsetup:upgradeSteps>
+    </genericsetup:upgradeSteps>
 
-  <genericsetup:upgradeSteps
-    source="*"
-    destination="6.6"
-    profile="eea.workflow:default">
+    <genericsetup:upgradeSteps
+            source="*"
+            destination="6.6"
+            profile="eea.workflow:default">
 
-    <genericsetup:upgradeDepends
-      title="Import the Javascript registry"
-      import_steps="jsregistry"
-      />
+        <genericsetup:upgradeDepends
+                title="Import the Javascript registry"
+                import_steps="jsregistry"
+                />
 
-  </genericsetup:upgradeSteps>
+    </genericsetup:upgradeSteps>
+
+    <genericsetup:upgradeSteps
+            source="6.6"
+            destination="7.1"
+            profile="eea.workflow:default">
+
+        <genericsetup:upgradeDepends
+                title="Import the contentrules registry"
+                import_steps="contentrules"
+                />
+
+    </genericsetup:upgradeSteps>
 
 </configure>

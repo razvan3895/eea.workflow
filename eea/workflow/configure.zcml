@@ -18,8 +18,11 @@
     <include file="documentation.zcml" />
     <include file="profiles.zcml" />
     <include file="skins.zcml" />
-    <include package=".portlets" />
+
     <include package=".browser" />
+    <include package=".portlets" />
+    <include package=".rules" />
+    <include package=".upgrades" />
 
     <adapter factory=".utils.ATFieldValueProvider" />
     <adapter factory=".utils.TextFieldValueProvider" />
@@ -68,8 +71,6 @@
         for="Products.Archetypes.interfaces.IBaseContent
              OFS.interfaces.IObjectClonedEvent"
         handler="eea.workflow.events.handle_object_cloned" />
-
-    <include package=".upgrades" />
 
     <adapter factory=".archive.archive_annotation_storage" />
 

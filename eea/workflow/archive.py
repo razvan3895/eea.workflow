@@ -10,6 +10,8 @@ from persistent import Persistent
 from zope.annotation.factory import factory
 from zope.component import adapts
 from zope.interface import implements, alsoProvides, noLongerProvides
+from zope.event import notify
+from z3c.caching.purge import Purge
 
 
 class ObjectArchivedAnnotationStorage(Persistent):
@@ -23,7 +25,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
         """Is this object archived?"""
         return bool(getattr(self, 'archive_date', False))
 
-    def unarchive(self, context):
+    def unarchive(self, context, custom_message=None):
         """ Unarchive the object
         """
         noLongerProvides(context, IObjectArchived)
@@ -37,7 +39,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
         state = wftool.getInfoFor(context, 'review_state')
         actor = mtool.getAuthenticatedMember().getId()
 
-        comments = (u"Unarchived by %(actor)s on %(date)s" % {
+        comments = custom_message or (u"Unarchived by %(actor)s on %(date)s" % {
                         'actor':actor,
                         'date':now.ISO8601(),
                     })
@@ -55,6 +57,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
 
         context.workflow_history._p_changed = True
         context.reindexObject()
+        notify(Purge(context))
 
     def archive(self, context, initiator=None, reason=None, custom_message=None):
         """Archive the object"""
@@ -105,6 +108,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
 
         context.workflow_history._p_changed = True
         context.reindexObject()
+        notify(Purge(context))
 
 
 archive_annotation_storage = factory(ObjectArchivedAnnotationStorage, key="eea.workflow.archive")
