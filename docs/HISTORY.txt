@@ -3,6 +3,13 @@ Changelog
 
 7.1-dev - (unreleased)
 ----------------------
+* Upgrade step: Within "Plone > Site setup > Add-ons" click on
+  upgrade button available for eea.workflow
+  [ichimdav refs #18316]
+* Feature: added archive and unarchive content rules which can archive
+  or unarchive either the object or the previous version of the object
+  for which the action was registered
+  [ichim-david refs #18316]
 
 7.0 - (2014-02-03)
 ------------------
