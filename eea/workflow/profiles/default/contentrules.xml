@@ -1,29 +1,5 @@
 <?xml version="1.0"?>
 <contentrules>
- <rule name="rule-enable-discussions-assessments"
-    title="Enable discussion when Assessments are made visible or published to Eionet"
-    description="" enabled="True"
-    event="Products.CMFCore.interfaces.IActionSucceededEvent"
-    stop-after="False">
-  <conditions>
-   <condition type="plone.conditions.PortalType">
-    <property name="check_types">
-     <element>Assessment</element>
-    </property>
-   </condition>
-   <condition type="plone.conditions.WorkflowTransition">
-    <property name="wf_transitions">
-     <element>publishEionet</element>
-     <element>show</element>
-    </property>
-   </condition>
-  </conditions>
-  <actions>
-   <action type="Products.EEAContentTypes.actions.enable_disable_discussion">
-    <property name="action">disabled</property>
-   </action>
-  </actions>
- </rule>
  <rule name="rule-archive-previous-versions" title="Archive previous version" description=""
     enabled="True" event="Products.CMFCore.interfaces.IActionSucceededEvent"
     stop-after="False">
