@@ -3,6 +3,9 @@ Changelog
 
 7.1-dev - (unreleased)
 ----------------------
+* Feature: archive dialog now gives option to archive also previous
+  versions of given context
+  [ichimdav refs #18740]
 * Upgrade step: Within "Plone > Site setup > Add-ons" click on
   upgrade button available for eea.workflow
   [ichimdav refs #18316]

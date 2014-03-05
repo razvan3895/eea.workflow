@@ -1,13 +1,15 @@
 """ Archival views
 """
 
-from Products.CMFPlone.utils import getToolByName
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
 from zope.component import queryAdapter
 from plone.protect import PostOnly
 
+from Products.CMFPlone.utils import getToolByName
 from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
+from eea.workflow.archive import archive_object, archive_obj_and_children, \
+    archive_previous_versions
 from eea.workflow.interfaces import IObjectArchivator, IObjectArchived
 
 
@@ -29,25 +31,20 @@ class ArchiveContent(BrowserView):
         PostOnly(self.request)
         form = self.request.form
         recurse = form.get('workflow_archive_recurse', False)
+        prev_versions = form.get('workflow_archive_previous_versions', False)
         val = {'initiator': form.get('workflow_archive_initiator'),
                'custom_message': form.get('workflow_other_reason', '').strip(),
                'reason': form.get('workflow_reasons_radio', 'other'),
         }
-
-        if recurse:
-            catalog = getToolByName(self.context, 'portal_catalog')
-            query = {'path': '/'.join(self.context.getPhysicalPath())}
-            brains = catalog.searchResults(query)
-
-            for brain in brains:
-                obj = brain.getObject()
-                storage = queryAdapter(obj, IObjectArchivator)
-                storage.archive(obj, **val)
-
+        if recurse and not prev_versions:
+            archive_obj_and_children(self.context, **val)
+        elif recurse and prev_versions:
+            archive_previous_versions(self.context, also_children=True, **val)
+        elif prev_versions and not recurse:
+            archive_previous_versions(self.context, **val)
+            archive_object(self.context, **val)
         else:
-            storage = queryAdapter(self.context, IObjectArchivator)
-            storage.archive(self.context, initiator=val['initiator'],
-                     custom_message=val['custom_message'], reason=val['reason'])
+            archive_object(self.context, **val)
 
         return "OK"
 

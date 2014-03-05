@@ -16,14 +16,12 @@ def setupATVocabularies(context):
     if context.readDataFile('eea.workflow.txt') is None:
         return
 
-    #import pdb; pdb.set_trace()
     replace = bool(context.readDataFile('eeaworkflow_vocabularies.txt'))
 
     portal = context.getSite()
     atvm = getToolByName(portal, ATVOCABULARYTOOL, None)
     if atvm is None:
         return
-    #print "imported vocabs"
 
     for vkey in ATVOCABS.keys():
         if hasattr(atvm, vkey):
