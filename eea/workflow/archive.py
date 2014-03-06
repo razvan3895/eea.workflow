@@ -138,7 +138,8 @@ def archive_obj_and_children(context, **kwargs):
         storage.archive(obj, **kwargs)
 
 
-def archive_previous_versions(context, also_children=False, **kwargs):
+def archive_previous_versions(context, skip_already_archived=True,
+                              also_children=False, **kwargs):
     """ Archive previous versions of given object
     """
     adapter = IGetVersions(context)
@@ -150,10 +151,14 @@ def archive_previous_versions(context, also_children=False, **kwargs):
             break
         previous_versions.append(version)
     for obj in previous_versions:
+        if skip_already_archived:
+            if IObjectArchived.providedBy(obj):
+                continue
         if also_children:
             archive_obj_and_children(obj, **kwargs)
-        storage = queryAdapter(obj, IObjectArchivator)
-        storage.archive(obj, **kwargs)
+        else:
+            storage = queryAdapter(obj, IObjectArchivator)
+            storage.archive(obj, **kwargs)
 
 
 class ArchivePreviousVersions(BrowserView):

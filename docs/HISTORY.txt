@@ -3,6 +3,11 @@ Changelog
 
 7.1-dev - (unreleased)
 ----------------------
+* Upgrade step: from Plone root run /@@archive_previous_versions
+  [ichimdav refs #18740]
+* Feature: added @@archive_previous_versions BrowserView which will archive
+  previous versions of archived objects if the versions aren't already archived
+  [ichimdav refs #18740]
 * Feature: archive dialog now gives option to archive also previous
   versions of given context
   [ichimdav refs #18740]
