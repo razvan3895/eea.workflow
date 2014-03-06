@@ -2,7 +2,6 @@
 """
 
 from DateTime import DateTime
-from Products.CMFCore.utils import getToolByName
 from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
 from Products.Archetypes.interfaces import IBaseObject
 from Products.CMFPlone.utils import getToolByName
