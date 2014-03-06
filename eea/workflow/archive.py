@@ -2,6 +2,9 @@
 """
 
 from DateTime import DateTime
+from Products.Five import BrowserView
+import logging
+import transaction
 from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
 from Products.Archetypes.interfaces import IBaseObject
 from Products.CMFPlone.utils import getToolByName
@@ -151,3 +154,50 @@ def archive_previous_versions(context, also_children=False, **kwargs):
             archive_obj_and_children(obj, **kwargs)
         storage = queryAdapter(obj, IObjectArchivator)
         storage.archive(obj, **kwargs)
+
+
+class ArchivePreviousVersions(BrowserView):
+    """ Archives previous versions of objects that are archived
+    """
+
+    def __init__(self, context, request):
+        super(ArchivePreviousVersions, self).__init__(context, request)
+        self.context = context
+        self.request = request
+
+    def __call__(self):
+        """ Call method
+        """
+        log = logging.getLogger("archive-versions")
+        cat = getToolByName(self.context, 'portal_catalog')
+        brains = cat(object_provides="eea.workflow.interfaces.IObjectArchived",
+                     show_inactive=True, Language="all")
+        also_children = self.request.get('alsoChildren')
+        count = 0
+        total = len(brains)
+        obj_urls = "THE FOLLOWING OBJECTS ARE ARCHIVED:\n"
+        log.info("Start Archiving the previous versions of %d archived objects",
+                 total)
+        for brain in brains:
+            brain_url = brain.getURL(1)
+            try:
+                obj = brain.getObject()
+            except Exception:
+                log.info("Can't retrieve %s", brain_url)
+                continue
+            if also_children:
+                archive_previous_versions(obj, also_children=True)
+            else:
+                archive_previous_versions(obj)
+            log.info("Archived %s", brain_url)
+            count += 1
+            obj_urls += "%s \n" % brain_url
+            if count % 100 == 0:
+                transaction.commit()
+                log.info('Subtransaction committed to zodb (%s/%s)', count,
+                         total)
+        log.info("End Archiving the previous versions of %d archived objects",
+                 total)
+        return obj_urls
+
+

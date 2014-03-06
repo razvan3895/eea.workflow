@@ -24,6 +24,8 @@
     <include package=".rules" />
     <include package=".upgrades" />
 
+    <include package="Products.CMFCore" />
+
     <adapter factory=".utils.ATFieldValueProvider" />
     <adapter factory=".utils.TextFieldValueProvider" />
     <adapter factory=".utils.ATFieldIsRequiredForState" />
@@ -51,6 +53,14 @@
         class=".readiness.ObjectReadinessView"
         allowed_interface=".interfaces.IObjectReadiness" />
     <adapter factory=".readiness.ObjectReadiness" for="*" />
+
+    <!-- Browser views -->
+    <browser:page
+            name="archive_previous_versions"
+            for="*"
+            permission="cmf.ModifyPortalContent"
+            class=".archive.ArchivePreviousVersions"
+            />
 
     <subscriber
         for="Products.Archetypes.interfaces.IBaseContent
