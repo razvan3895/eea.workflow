@@ -139,6 +139,7 @@ def archive_object(context, **kwargs):
     """
     storage = queryAdapter(context, IObjectArchivator)
     storage.archive(context, **kwargs)
+    return context
 
 
 def archive_obj_and_children(context, **kwargs):
@@ -151,10 +152,13 @@ def archive_obj_and_children(context, **kwargs):
     query = {'path': '/'.join(context.getPhysicalPath())}
     brains = catalog.searchResults(query)
 
+    affected_objects = []
     for brain in brains:
         obj = brain.getObject()
         storage = queryAdapter(obj, IObjectArchivator)
         storage.archive(obj, **kwargs)
+        affected_objects.append(obj)
+    return affected_objects
 
 
 def archive_previous_versions(context, skip_already_archived=True,
@@ -186,15 +190,18 @@ def archive_previous_versions(context, skip_already_archived=True,
         if version.UID() == uid:
             break
         previous_versions.append(version)
+    affected_objects = []
     for obj in previous_versions:
         if skip_already_archived:
             if IObjectArchived.providedBy(obj):
                 continue
         if also_children:
-            archive_obj_and_children(obj, **options)
+            affected_objects.append(archive_obj_and_children(obj, **options))
         else:
             storage = queryAdapter(obj, IObjectArchivator)
             storage.archive(obj, **options)
+            affected_objects.append(obj)
+    return affected_objects
 
 
 class ArchivePreviousVersions(BrowserView):
@@ -219,21 +226,29 @@ class ArchivePreviousVersions(BrowserView):
         obj_urls = "THE FOLLOWING OBJECTS ARE ARCHIVED:\n"
         log.info("Start Archiving the previous versions of %d archived objects",
                  total)
+
+        affected_objects = set()
         for brain in brains:
-            brain_url = brain.getURL(1)
+            previous_versions = []
+            brain_url = brain.getURL()
             try:
                 obj = brain.getObject()
             except Exception:
                 log.info("Can't retrieve %s", brain_url)
                 continue
             if also_children:
-                archive_previous_versions(obj, also_children=True,
-                                          same_archive_date=True)
+                previous_versions.extend(archive_previous_versions(obj,
+                                    also_children=True, same_archive_date=True))
             else:
-                archive_previous_versions(obj, same_archive_date=True)
-            log.info("Archived %s", brain_url)
+                previous_versions.extend(archive_previous_versions(obj,
+                                                        same_archive_date=True))
+            for obj in previous_versions:
+                obj_url = obj.absolute_url()
+                if obj_url not in affected_objects:
+                    log.info("Archived %s", obj_url)
+                    obj_urls += "%s \n" % obj_url
+                    affected_objects.add(obj_url)
             count += 1
-            obj_urls += "%s \n" % brain_url
             if count % 100 == 0:
                 transaction.commit()
                 log.info('Subtransaction committed to zodb (%s/%s)', count,
@@ -241,5 +256,3 @@ class ArchivePreviousVersions(BrowserView):
         log.info("End Archiving the previous versions of %d archived objects",
                  total)
         return obj_urls
-
-
