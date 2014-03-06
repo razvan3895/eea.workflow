@@ -31,6 +31,9 @@ class ObjectArchivedAnnotationStorage(Persistent):
 
     def unarchive(self, context, custom_message=None):
         """ Unarchive the object
+        :param context: object which is going to be unarchived
+        :param custom_message: Custom message explaining why the object was
+               unarchived
         """
         noLongerProvides(context, IObjectArchived)
 
@@ -63,19 +66,28 @@ class ObjectArchivedAnnotationStorage(Persistent):
         context.reindexObject()
         notify(Purge(context))
 
-    def archive(self, context, initiator=None, reason=None, custom_message=None):
-        """Archive the object"""
+    def archive(self, context, initiator=None, reason=None, custom_message=None,
+                archive_date=None):
+        """Archive the object
+        :param context: given object that should be archived
+        :param initiator: the user id or name which commissioned the archival
+        :param reason: reason id for which the object was archived
+        :param custom_message: Custom message explaining why the object was
+               archived
+        :param archive_date: DateTime object which sets the expiration date of
+               the object
+        """
 
         wftool = getToolByName(context, 'portal_workflow')
         has_workflow = wftool.getChainFor(context)
         if not has_workflow:
             # NOP
             return
-        now = DateTime()
+        date = archive_date and archive_date or DateTime()
         alsoProvides(context, IObjectArchived)
-        context.setExpirationDate(now)
+        context.setExpirationDate(date)
 
-        self.archive_date   = now
+        self.archive_date   = date
         self.initiator      = initiator
         self.custom_message = custom_message
         self.reason         = reason
@@ -96,7 +108,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
                         'actor':actor,
                         'initiator':initiator,
                         'reason':reason,
-                        'date':now.ISO8601(),
+                        'date':date.ISO8601(),
                     })
 
         for wfname in context.workflow_history.keys():
@@ -106,7 +118,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
                 'review_state':state,
                 'actor':actor,
                 'comments':comments,
-                'time':now,
+                'time':date,
                 },)
             context.workflow_history[wfname] = history
 
@@ -115,11 +127,15 @@ class ObjectArchivedAnnotationStorage(Persistent):
         notify(Purge(context))
 
 
-archive_annotation_storage = factory(ObjectArchivedAnnotationStorage, key="eea.workflow.archive")
+archive_annotation_storage = factory(ObjectArchivedAnnotationStorage,
+                                     key="eea.workflow.archive")
 
 # helper functions
 def archive_object(context, **kwargs):
     """ Archive given context
+    :param context: object
+    :param kwargs: options that are passed to the archive method directly
+           affecting it's results if they are passed
     """
     storage = queryAdapter(context, IObjectArchivator)
     storage.archive(context, **kwargs)
@@ -127,6 +143,9 @@ def archive_object(context, **kwargs):
 
 def archive_obj_and_children(context, **kwargs):
     """ Archive given context and it's children
+    :param context: object
+    :param kwargs: options that are passed to the archive method directly
+           affecting it's results if they are passed
     """
     catalog = getToolByName(context, 'portal_catalog')
     query = {'path': '/'.join(context.getPhysicalPath())}
@@ -139,10 +158,26 @@ def archive_obj_and_children(context, **kwargs):
 
 
 def archive_previous_versions(context, skip_already_archived=True,
-                              also_children=False, **kwargs):
+                              same_archive_date=False, also_children=False,
+                              **kwargs):
     """ Archive previous versions of given object
+    :param context: object
+    :param skip_already_archived: boolean indicating whether it should skip
+           archiving the previous version that is already archived
+    :param same_archive_date: boolean indicating whether the object being
+           archived should receive the same archiving date as the context
+    :param also_children: boolean indicating whether the children of the
+           versions should also be archived
+    :param kwargs: options that are passed to the archive method directly
+           affecting it's results if they are passed
     """
     adapter = IGetVersions(context)
+    options = kwargs
+    if not options:
+        options = {'custom_message': adapter.custom_message,
+                   'reason': adapter.reason}
+    if same_archive_date:
+        options.update({'archive_date': adapter.archive_date})
     versions = adapter.versions()
     previous_versions = []
     uid = context.UID()
@@ -155,10 +190,10 @@ def archive_previous_versions(context, skip_already_archived=True,
             if IObjectArchived.providedBy(obj):
                 continue
         if also_children:
-            archive_obj_and_children(obj, **kwargs)
+            archive_obj_and_children(obj, **options)
         else:
             storage = queryAdapter(obj, IObjectArchivator)
-            storage.archive(obj, **kwargs)
+            storage.archive(obj, **options)
 
 
 class ArchivePreviousVersions(BrowserView):
@@ -191,9 +226,10 @@ class ArchivePreviousVersions(BrowserView):
                 log.info("Can't retrieve %s", brain_url)
                 continue
             if also_children:
-                archive_previous_versions(obj, also_children=True)
+                archive_previous_versions(obj, also_children=True,
+                                          same_archive_date=True)
             else:
-                archive_previous_versions(obj)
+                archive_previous_versions(obj, same_archive_date=True)
             log.info("Archived %s", brain_url)
             count += 1
             obj_urls += "%s \n" % brain_url
