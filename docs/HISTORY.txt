@@ -3,6 +3,9 @@ Changelog
 
 7.1-dev - (unreleased)
 ----------------------
+* Change: updated wording of the archive options presented within the archive
+  dialog
+  [ichimdav refs #18470]
 * Change: archive operation now accepts an optional archive_date parameter which
   can be used as the archive date instead of the date when the archive operation
   was called
