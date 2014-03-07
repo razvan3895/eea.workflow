@@ -10,7 +10,11 @@ Changelog
   can be used as the archive date instead of the date when the archive operation
   was called
   [ichimdav refs #18740]
-* Upgrade step: from Plone root run /@@archive_previous_versions
+* Upgrade step: from Plone root:
+   - run /@@archive_previous_versions if you want to archive only the previous 
+     versions
+   - run /@@archive_previous_versions?alsoChildren=True if you want to archive
+     also the children of the previous versions
   [ichimdav refs #18740]
 * Feature: added @@archive_previous_versions BrowserView which will archive
   previous versions of archived objects if the versions aren't already archived
