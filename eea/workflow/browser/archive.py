@@ -42,8 +42,8 @@ class ArchiveContent(BrowserView):
             archive_obj_and_children(self.context, **val)
             archive_previous_versions(self.context, also_children=True, **val)
         elif prev_versions and not recurse:
-            archive_previous_versions(self.context, **val)
             archive_object(self.context, **val)
+            archive_previous_versions(self.context, **val)
         else:
             archive_object(self.context, **val)
 

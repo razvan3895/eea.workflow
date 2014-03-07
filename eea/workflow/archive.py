@@ -179,9 +179,12 @@ def archive_previous_versions(context, skip_already_archived=True,
     archivator_adapter = queryAdapter(context, IObjectArchivator)
     options = kwargs
     if not options:
-        options = {'custom_message': archivator_adapter.custom_message,
-                   'reason': archivator_adapter.reason}
-    if same_archive_date:
+        custom_message = getattr(archivator_adapter, 'custom_message', '')
+        reason = getattr(archivator_adapter, 'reason',
+                         'content_is_outdated')
+        options = {'custom_message': custom_message,
+                   'reason': reason}
+    if same_archive_date and getattr(archivator_adapter, 'archive_date'):
         options.update({'archive_date': archivator_adapter.archive_date})
     versions = versions_adapter.versions()
     previous_versions = []

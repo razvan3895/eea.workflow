@@ -52,7 +52,7 @@ class TestHistory(TestCase):
         """ Test history version
         """
         portal = self.portal
-        fid     = portal.invokeFactory("Folder", 'f1')
+        fid    = portal.invokeFactory("Folder", 'f1')
         folder = portal[fid]
         wftool = portal.portal_workflow
         wftool.doActionFor(folder, 'publish')
