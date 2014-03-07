@@ -182,7 +182,9 @@ def archive_previous_versions(context, skip_already_archived=True,
         custom_message = getattr(archivator_adapter, 'custom_message', '')
         reason = getattr(archivator_adapter, 'reason',
                          'content_is_outdated')
+        initiator = getattr(archivator_adapter, 'initiator', None)
         options = {'custom_message': custom_message,
+                   'initiator': initiator,
                    'reason': reason}
     if same_archive_date and getattr(archivator_adapter, 'archive_date'):
         options.update({'archive_date': archivator_adapter.archive_date})
