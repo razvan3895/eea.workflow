@@ -14,11 +14,11 @@ Changelog
   was called
   [ichimdav refs #18740]
 * Upgrade step: from Plone root:
-   - run /@@archive_previous_versions if you want to archive only the previous 
+   - run /@@archive_previous_versions if you want to archive only the previous
      versions
    - run /@@archive_previous_versions?alsoChildren=True if you want to archive
      also the children of the previous versions
-  [ichimdav refs #18740]
+   - [ichimdav refs #18740]
 * Feature: added @@archive_previous_versions BrowserView which will archive
   previous versions of archived objects if the versions aren't already archived
   [ichimdav refs #18740]
