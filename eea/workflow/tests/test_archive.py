@@ -45,3 +45,26 @@ class TestArchive(TestCase):
         archive_previous_versions(version)
         assert not IObjectArchived.providedBy(version)
         assert IObjectArchived.providedBy(folder)
+
+    def test_archive_previous_versions_with_children(self):
+        portal  = self.portal
+        fid     = portal.invokeFactory("Folder", 'f1')
+        folder  = portal[fid]
+        docid   = folder.invokeFactory("Document", 'd1')
+        doc     = folder[docid]
+        version = create_version(folder)
+        archive_previous_versions(version, also_children=True)
+        assert not IObjectArchived.providedBy(version)
+        assert IObjectArchived.providedBy(folder)
+        assert IObjectArchived.providedBy(doc)
+
+    def test_archive_previous_versions_with_children_return(self):
+        portal  = self.portal
+        fid     = portal.invokeFactory("Folder", 'f1')
+        folder  = portal[fid]
+        docid   = folder.invokeFactory("Document", 'd1')
+        doc     = folder[docid]
+        version = create_version(folder)
+        objects = archive_previous_versions(version, also_children=True)
+        expected_output = [folder, doc]
+        assert objects == expected_output
