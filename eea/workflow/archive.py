@@ -165,15 +165,16 @@ def archive_previous_versions(context, skip_already_archived=True,
                               same_archive_date=False, also_children=False,
                               **kwargs):
     """ Archive previous versions of given object
-    :param context: object
-    :param skip_already_archived: boolean indicating whether it should skip
+    :param object context: object
+    :param bool skip_already_archived: boolean indicating whether it should skip
            archiving the previous version that is already archived
-    :param same_archive_date: boolean indicating whether the object being
+    :param bool same_archive_date: boolean indicating whether the object being
            archived should receive the same archiving date as the context
-    :param also_children: boolean indicating whether the children of the
+    :param bool also_children: boolean indicating whether the children of the
            versions should also be archived
-    :param kwargs: options that are passed to the archive method directly
+    :param dict kwargs: options that are passed to the archive method directly
            affecting it's results if they are passed
+    :rtype list
     """
     versions_adapter = IGetVersions(context)
     archivator_adapter = queryAdapter(context, IObjectArchivator)
@@ -201,7 +202,7 @@ def archive_previous_versions(context, skip_already_archived=True,
             if IObjectArchived.providedBy(obj):
                 continue
         if also_children:
-            affected_objects.append(archive_obj_and_children(obj, **options))
+            affected_objects.extend(archive_obj_and_children(obj, **options))
         else:
             storage = queryAdapter(obj, IObjectArchivator)
             storage.archive(obj, **options)
