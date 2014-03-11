@@ -5,13 +5,13 @@ Changelog
 ----------------------
 * Bug fix: archive_previous_versions BrowserView now correctly extends the
   returning list when calling archive_obj_and_children
-  [ichimdav refs #18470]
+  [ichimdav refs #18740]
 
 7.1 - (2014-03-10)
 ------------------
 * Change: updated wording of the archive options presented within the archive
   dialog
-  [ichimdav refs #18470]
+  [ichimdav refs #18740]
 * Change: archive operation now accepts an optional archive_date parameter which
   can be used as the archive date instead of the date when the archive operation
   was called
