@@ -15,56 +15,40 @@ class TestArchive(TestCase):
         """ After Setup
         """
         self.setRoles(('Manager', ))
+        portal = self.portal
+        fid = portal.invokeFactory("Folder", 'f1')
+        self.folder = portal[fid]
+        docid = self.folder.invokeFactory("Document", 'd1')
+        self.doc = self.folder[docid]
 
     def test_archive_object(self):
         """ Test history version
         """
-        portal = self.portal
-        fid    = portal.invokeFactory("Folder", 'f1')
-        folder = portal[fid]
-        archive_object(folder)
-        assert IObjectArchived.providedBy(folder)
+        archive_object(self.folder)
+        assert IObjectArchived.providedBy(self.folder)
 
     def test_archive_obj_and_children(self):
         """ Test history version
         """
-        portal = self.portal
-        fid    = portal.invokeFactory("Folder", 'f1')
-        folder = portal[fid]
-        docid  = folder.invokeFactory("Document", 'd1')
-        doc    = folder[docid]
-        archive_obj_and_children(folder)
-        assert IObjectArchived.providedBy(folder)
-        assert IObjectArchived.providedBy(doc)
+        archive_obj_and_children(self.folder)
+        assert IObjectArchived.providedBy(self.folder)
+        assert IObjectArchived.providedBy(self.doc)
 
     def test_archive_previous_versions(self):
-        portal  = self.portal
-        fid     = portal.invokeFactory("Folder", 'f1')
-        folder  = portal[fid]
-        version = create_version(folder)
+        version = create_version(self.folder)
         archive_previous_versions(version)
         assert not IObjectArchived.providedBy(version)
-        assert IObjectArchived.providedBy(folder)
+        assert IObjectArchived.providedBy(self.folder)
 
     def test_archive_previous_versions_with_children(self):
-        portal  = self.portal
-        fid     = portal.invokeFactory("Folder", 'f1')
-        folder  = portal[fid]
-        docid   = folder.invokeFactory("Document", 'd1')
-        doc     = folder[docid]
-        version = create_version(folder)
+        version = create_version(self.folder)
         archive_previous_versions(version, also_children=True)
         assert not IObjectArchived.providedBy(version)
-        assert IObjectArchived.providedBy(folder)
-        assert IObjectArchived.providedBy(doc)
+        assert IObjectArchived.providedBy(self.folder)
+        assert IObjectArchived.providedBy(self.doc)
 
     def test_archive_previous_versions_with_children_return(self):
-        portal  = self.portal
-        fid     = portal.invokeFactory("Folder", 'f1')
-        folder  = portal[fid]
-        docid   = folder.invokeFactory("Document", 'd1')
-        doc     = folder[docid]
-        version = create_version(folder)
+        version = create_version(self.folder)
         objects = archive_previous_versions(version, also_children=True)
-        expected_output = [folder, doc]
+        expected_output = [self.folder, self.doc]
         assert objects == expected_output
