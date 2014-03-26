@@ -3,6 +3,9 @@ Changelog
 
 7.2-dev - (unreleased)
 ----------------------
+* Upgrade step: from Plone root:
+   - run /@@archive_previous_versions?alsoChildren=True
+   - [ichimdav refs #18740]
 * Bug fix: archive_previous_versions BrowserView now correctly extends the
   returning list when calling archive_obj_and_children
   [ichimdav refs #18740]
