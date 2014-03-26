@@ -3,6 +3,10 @@ Changelog
 
 7.2-dev - (unreleased)
 ----------------------
+* Upgrade step: within @@rules-controlpanel:
+  - Enable Archive and Unarchive previous version rules by setting a path
+    where these rules should be enabled
+  [ichimdav refs #18316]
 * Bug fix: archive_previous_versions BrowserView now correctly extends the
   returning list when calling archive_obj_and_children
   [ichimdav refs #18740]
