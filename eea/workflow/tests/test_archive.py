@@ -35,12 +35,30 @@ class TestArchive(TestCase):
         assert IObjectArchived.providedBy(self.doc)
 
     def test_archive_previous_versions(self):
+        """ Test the archival of the previous versions
+            for the given object
+        """
         version = create_version(self.folder)
         archive_previous_versions(version)
         assert not IObjectArchived.providedBy(version)
         assert IObjectArchived.providedBy(self.folder)
 
+    def test_archive_previous_versions_without_children(self):
+        """ Test the archival of the previous versions
+            for the given object even when calling the method
+            that should archive also the children
+        """
+        fid = self.portal.invokeFactory("Folder", 'f2')
+        self.folder = self.portal[fid]
+        version = create_version(self.folder)
+        archive_previous_versions(version, also_children=True)
+        assert not IObjectArchived.providedBy(version)
+        assert IObjectArchived.providedBy(self.folder)
+
     def test_archive_previous_versions_with_children(self):
+        """ Test the archival of the previous versions
+            for the given object and their children
+        """
         version = create_version(self.folder)
         archive_previous_versions(version, also_children=True)
         assert not IObjectArchived.providedBy(version)
@@ -48,6 +66,9 @@ class TestArchive(TestCase):
         assert IObjectArchived.providedBy(self.doc)
 
     def test_archive_previous_versions_with_children_return(self):
+        """ Test the return value for archival of the previous versions
+            for the given object and their children
+        """
         version = create_version(self.folder)
         objects = archive_previous_versions(version, also_children=True)
         expected_output = [self.folder, self.doc]

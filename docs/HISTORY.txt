@@ -3,6 +3,9 @@ Changelog
 
 7.2-dev - (unreleased)
 ----------------------
+* Bug fix: archive process no longer crashes if alsoChildren option is selected
+  and the object contained a discussion item
+  [ichim-david refs #19334]
 * Upgrade step: from Plone root:
    - run /@@archive_previous_versions?alsoChildren=True
    - [ichimdav refs #18740]

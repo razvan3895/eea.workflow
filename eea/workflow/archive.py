@@ -156,6 +156,8 @@ def archive_obj_and_children(context, **kwargs):
     for brain in brains:
         obj = brain.getObject()
         storage = queryAdapter(obj, IObjectArchivator)
+        if not storage:
+            continue
         storage.archive(obj, **kwargs)
         affected_objects.append(obj)
     return affected_objects

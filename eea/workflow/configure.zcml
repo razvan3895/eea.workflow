@@ -56,11 +56,10 @@
 
     <!-- Browser views -->
     <browser:page
-            name="archive_previous_versions"
-            for="*"
-            permission="cmf.ModifyPortalContent"
-            class=".archive.ArchivePreviousVersions"
-            />
+        name="archive_previous_versions"
+        for="*"
+        permission="cmf.ModifyPortalContent"
+        class=".archive.ArchivePreviousVersions" />
 
     <subscriber
         for="Products.Archetypes.interfaces.IBaseContent
