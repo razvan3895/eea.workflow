@@ -3,6 +3,9 @@ Changelog
 
 7.2-dev - (unreleased)
 ----------------------
+* Bug fix: decode the initiator and reason form fields in order to avoid error
+  when non asci characters are passed in the form
+  [ichim-david refs #19334]
 * Bug fix: archive process no longer crashes if alsoChildren option is selected
   and the object contained a discussion item
   [ichim-david refs #19334]

@@ -32,9 +32,9 @@ class ArchiveContent(BrowserView):
         form = self.request.form
         recurse = form.get('workflow_archive_recurse', False)
         prev_versions = form.get('workflow_archive_previous_versions', False)
-        val = {'initiator': form.get('workflow_archive_initiator'),
+        val = {'initiator': form.get('workflow_archive_initiator', '').decode('utf-8'),
                'custom_message': form.get('workflow_other_reason', '').strip(),
-               'reason': form.get('workflow_reasons_radio', 'other'),
+               'reason': form.get('workflow_reasons_radio', 'other').decode('utf-8'),
         }
         if recurse and not prev_versions:
             archive_obj_and_children(self.context, **val)
