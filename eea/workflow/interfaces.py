@@ -102,6 +102,8 @@ class IObjectArchivator(Interface):
     # object's ExpirationDate can be changed
     archive_date = Attribute("The date when the object was archived")
 
-    def archive():
+    def archive(self):
         """ Archives the object """
 
+    def unarchive(self):
+        """ Unarchives the object """

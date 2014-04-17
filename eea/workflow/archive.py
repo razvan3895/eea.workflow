@@ -1,15 +1,12 @@
 """ IObjectArchived implementation
 """
 
+import logging
+
 from DateTime import DateTime
 from Products.Five import BrowserView
-import logging
 import transaction
-from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
 from Products.Archetypes.interfaces import IBaseObject
-from Products.CMFPlone.utils import getToolByName
-from eea.versions.interfaces import IGetVersions
-from eea.workflow.interfaces import IObjectArchived, IObjectArchivator
 from persistent import Persistent
 from zope.annotation.factory import factory
 from zope.component import adapts, queryAdapter
@@ -17,6 +14,11 @@ from zope.interface import implements, alsoProvides, noLongerProvides
 from zope.event import notify
 from z3c.caching.purge import Purge
 
+from Products.ATVocabularyManager.namedvocabulary import NamedVocabulary
+from Products.CMFPlone.utils import getToolByName
+from eea.versions.interfaces import IGetVersions
+from eea.workflow.interfaces import IObjectArchived, IObjectArchivator
+from Products.CMFPlone.utils import safe_unicode
 
 class ObjectArchivedAnnotationStorage(Persistent):
     """ The IObjectArchived information stored as annotation
@@ -47,19 +49,19 @@ class ObjectArchivedAnnotationStorage(Persistent):
         actor = mtool.getAuthenticatedMember().getId()
 
         comments = custom_message or (u"Unarchived by %(actor)s on %(date)s" % {
-                        'actor':actor,
-                        'date':now.ISO8601(),
-                    })
+            'actor': actor,
+            'date': now.ISO8601(),
+        })
 
         for wfname in context.workflow_history.keys():
             history = context.workflow_history[wfname]
             history += ({
-                'action':'UnArchive',
-                'review_state':state,
-                'actor':actor,
-                'comments':comments,
-                'time':now,
-                },)
+                            'action': 'UnArchive',
+                            'review_state': state,
+                            'actor': actor,
+                            'comments': comments,
+                            'time': now,
+                        },)
             context.workflow_history[wfname] = history
 
         context.workflow_history._p_changed = True
@@ -77,7 +79,9 @@ class ObjectArchivedAnnotationStorage(Persistent):
         :param archive_date: DateTime object which sets the expiration date of
                the object
         """
-
+        initiator = safe_unicode(initiator)
+        reason = safe_unicode(reason)
+        custom_message = safe_unicode(custom_message)
         wftool = getToolByName(context, 'portal_workflow')
         has_workflow = wftool.getChainFor(context)
         if not has_workflow:
@@ -87,10 +91,12 @@ class ObjectArchivedAnnotationStorage(Persistent):
         alsoProvides(context, IObjectArchived)
         context.setExpirationDate(date)
 
-        self.archive_date   = date
-        self.initiator      = initiator
+        # refactor this setting from here, without these assignments to self
+        # the test for is_archived fails
+        self.archive_date = date
+        self.initiator = initiator
         self.custom_message = custom_message
-        self.reason         = reason
+        self.reason = reason
 
         state = wftool.getInfoFor(context, 'review_state')
         mtool = getToolByName(context, 'portal_membership')
@@ -102,24 +108,23 @@ class ObjectArchivedAnnotationStorage(Persistent):
 
         if custom_message:
             reason += u" (%s)" % custom_message
-
         comments = (u"Archived by %(actor)s on %(date)s by request "
                     u"from %(initiator)s with reason: %(reason)s" % {
-                        'actor':actor,
-                        'initiator':initiator,
-                        'reason':reason,
-                        'date':date.ISO8601(),
+                        'actor': actor,
+                        'initiator': initiator,
+                        'reason': reason,
+                        'date': date.ISO8601()
                     })
 
         for wfname in context.workflow_history.keys():
             history = context.workflow_history[wfname]
             history += ({
-                'action':'Archive',
-                'review_state':state,
-                'actor':actor,
-                'comments':comments,
-                'time':date,
-                },)
+                            'action': 'Archive',
+                            'review_state': state,
+                            'actor': actor,
+                            'comments': comments,
+                            'time': date,
+                        },)
             context.workflow_history[wfname] = history
 
         context.workflow_history._p_changed = True
@@ -129,6 +134,7 @@ class ObjectArchivedAnnotationStorage(Persistent):
 
 archive_annotation_storage = factory(ObjectArchivedAnnotationStorage,
                                      key="eea.workflow.archive")
+
 
 # helper functions
 def archive_object(context, **kwargs):
@@ -246,10 +252,11 @@ class ArchivePreviousVersions(BrowserView):
                 continue
             if also_children:
                 previous_versions.extend(archive_previous_versions(obj,
-                                    also_children=True, same_archive_date=True))
+                                                    also_children=True,
+                                                    same_archive_date=True))
             else:
                 previous_versions.extend(archive_previous_versions(obj,
-                                                        same_archive_date=True))
+                                                    same_archive_date=True))
             for obj in previous_versions:
                 obj_url = obj.absolute_url()
                 if obj_url not in affected_objects:
