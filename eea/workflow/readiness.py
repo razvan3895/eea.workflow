@@ -62,9 +62,9 @@ class ObjectReadiness(object):
                                                                 #have a value
         optional_with_value = []    #optional fields that have a value
 
-        _debug_all_fieldnames = []      #all fieldnames 
+        _debug_all_fieldnames = []      #all fieldnames
         #fields or conditions which have value
-        _debug_required_fields_with_value = []   
+        _debug_required_fields_with_value = []
 
 
         generic_adapter = queryAdapter(self.context, IRequiredFieldsForState,
@@ -89,7 +89,7 @@ class ObjectReadiness(object):
             return
 
         for field in self.context.schema.fields():  #we assume AT here
-            field_name = field.getName() 
+            field_name = field.getName()
             if field.isMetadata or (field_name in OTHER_METADATA_FIELDS):
                 continue
 
@@ -97,7 +97,7 @@ class ObjectReadiness(object):
 
             total_fields += 1
 
-            info = queryMultiAdapter([self.context, field], 
+            info = queryMultiAdapter([self.context, field],
                             interface=IValueProvider, name=field_name)
             if info is None:
                 info = getMultiAdapter([self.context, field],
@@ -187,6 +187,9 @@ class ObjectReadinessView(object):
     def __init__(self, context, request):
         self.context = context
         self.request = request
+
+    checks = None
+    depends_on = None
 
     def get_info_for(self, state_name):
         """ Get info for state name

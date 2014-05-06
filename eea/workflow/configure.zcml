@@ -44,7 +44,6 @@
     <adapter factory=".readiness.ObjectReadiness"
         for="eea.workflow.interfaces.IHasMandatoryWorkflowFields" />
 
-
     <!-- re-register to make sure we catch all content items -->
     <browser:page
         name="get_readiness"
@@ -52,6 +51,7 @@
         permission="zope2.View"
         class=".readiness.ObjectReadinessView"
         allowed_interface=".interfaces.IObjectReadiness" />
+
     <adapter factory=".readiness.ObjectReadiness" for="*" />
 
     <!-- Browser views -->

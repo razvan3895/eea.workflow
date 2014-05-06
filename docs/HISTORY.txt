@@ -3,7 +3,9 @@ Changelog
 
 7.2-dev - (unreleased)
 ----------------------
-* Bug fix: decode the initiator, reason and message form fields in order to 
+* Bug fix: fixed various warning triggered on Zope startup
+  [ghicaale refs #19289]
+* Bug fix: decode the initiator, reason and message form fields in order to
   avoid error when non asci characters are passed in the form
   [ichim-david refs #19334]
 * Bug fix: archive process no longer crashes if alsoChildren option is selected
