@@ -1,8 +1,8 @@
 Changelog
 =========
 
-7.3-dev - (unreleased)
-----------------------
+7.3 - (2014-06-02)
+------------------
 * Bug fix: fixed "Archive/Unarchive" content rule action not to crash when there
   are no versions
   [ghicaale refs #19918]
