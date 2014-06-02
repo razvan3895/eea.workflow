@@ -5,18 +5,18 @@ from zope.interface import Interface, Attribute
 
 
 class IHasMandatoryWorkflowFields(Interface):
-    """ Marker interface for objects with fields that are required 
-    for workflow transitions 
+    """ Marker interface for objects with fields that are required
+    for workflow transitions
     """
 
 
 class IValueProvider(Interface):
     """ Objects of this type provide values
 
-    The use case is this: we want to be able to interrogate various 
-    AT fields contained in objects if they have value; we don't want 
-    to hardcode the logic that achieves this, so we make it extendible 
-    by adaptation. This package also provides a default implementation 
+    The use case is this: we want to be able to interrogate various
+    AT fields contained in objects if they have value; we don't want
+    to hardcode the logic that achieves this, so we make it extendible
+    by adaptation. This package also provides a default implementation
     for a component that adapts AT fields -> IValueProvider
     """
 
@@ -64,7 +64,7 @@ class IRequiredFieldsForState(Interface):
 
 
 class IObjectReadiness(Interface):
-    """ Returns info on how ready is an object to be moved to 
+    """ Returns info on how ready is an object to be moved to
     a certain workflow state
     """
 
@@ -74,12 +74,12 @@ class IObjectReadiness(Interface):
                                                         "should be considered")
 
     def get_info_for(state_name):
-        """ Returns a mapping containing statistics on object readiness 
+        """ Returns a mapping containing statistics on object readiness
         for a certain state
         """
 
     def is_ready_for(state_name):
-        """ Returns a bool that tells is the object is ready to be transitioned 
+        """ Returns a bool that tells is the object is ready to be transitioned
         to the named state
         """
 
@@ -98,7 +98,7 @@ class IObjectArchivator(Interface):
     reason = Attribute("Reason for archival, selected from predefined list")
     custom_message = Attribute("A human-readable text reason for archival")
 
-    # It may be useful to keep this date, as the 
+    # It may be useful to keep this date, as the
     # object's ExpirationDate can be changed
     archive_date = Attribute("The date when the object was archived")
 

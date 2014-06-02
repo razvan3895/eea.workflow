@@ -66,9 +66,10 @@ class ArchiveUnarchiveExecutor(object):
                    reason='Other', custom_message='new version %s'
                                                   ' was published' %
                                                   orig_obj_url)
+        versions = IGetVersions(obj).versions()
         if action == "archived":
-            if self.element.affectPreviousVersion:
-                obj = IGetVersions(obj).versions()[-2]
+            if self.element.affectPreviousVersion and len(versions) > 1:
+                obj = versions[-2]
                 adapter = IObjectArchivator(obj)
             if self.element.applyRecursively:
                 self.recursive_action(obj, 'archive', val)
@@ -78,8 +79,8 @@ class ArchiveUnarchiveExecutor(object):
             val = dict(custom_message='Unarchived by content'
                                       ' rule because latest version %s'
                                       ' was unpublished' % (orig_obj_url))
-            if self.element.affectPreviousVersion:
-                obj = IGetVersions(obj).versions()[-2]
+            if self.element.affectPreviousVersion and len(versions) > 1:
+                obj = versions[-2]
                 adapter = IObjectArchivator(obj)
             if self.element.applyRecursively:
                 self.recursive_action(obj, 'unarchive', val)
