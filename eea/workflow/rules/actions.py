@@ -15,7 +15,6 @@ from eea.workflow.rules.interfaces import IArchiveUnarchiveAction
 from eea.workflow.interfaces import IObjectArchivator
 from eea.versions.interfaces import IGetVersions
 
-
 logger = logging.getLogger("eea.workflow.actions")
 
 
@@ -60,34 +59,47 @@ class ArchiveUnarchiveExecutor(object):
         action = self.element.action
         obj = self.event.object
         orig_obj_url = obj.absolute_url(1)
-
-        adapter = IObjectArchivator(obj)
-        val = dict(initiator='contentRules',
-                   reason='Other', custom_message='new version %s'
-                                                  ' was published' %
-                                                  orig_obj_url)
         versions = IGetVersions(obj).versions()
+        adapter = None
+        val = dict()
+        rec_action = ''
+
         if action == "archived":
-            if self.element.affectPreviousVersion and len(versions) > 1:
-                obj = versions[-2]
-                adapter = IObjectArchivator(obj)
-            if self.element.applyRecursively:
-                self.recursive_action(obj, 'archive', val)
-            else:
-                adapter.archive(obj, **val)
+            rec_action = 'archive'
+            message = 'New version %s was published' % orig_obj_url
         else:
-            val = dict(custom_message='Unarchived by content'
-                                      ' rule because latest version %s'
-                                      ' was unpublished' % (orig_obj_url))
-            if self.element.affectPreviousVersion and len(versions) > 1:
+            rec_action = 'unarchive'
+            message = ('Unarchived by content rule because latest version %s '
+                       'was unpublished') % orig_obj_url
+
+        if self.element.affectPreviousVersion and self.element.applyRecursively:
+            if len(versions) > 1:
+                # no action to be taken
+                return True
+            else:
                 obj = versions[-2]
-                adapter = IObjectArchivator(obj)
-            if self.element.applyRecursively:
-                self.recursive_action(obj, 'unarchive', val)
+        elif self.element.affectPreviousVersion:
+            if len(versions) > 1:
+                # no action to be taken
+                return True
+            else:
+                obj = versions[-2]
+        else:
+            pass
+
+        val = dict(initiator='contentRules', reason='Other',
+                   custom_message=message)
+
+        if self.element.applyRecursively:
+            self.recursive_action(obj, rec_action, val)
+        else:
+            adapter = IObjectArchivator(obj)
+            if action == "archived":
+                adapter.archive(obj, **val)
             else:
                 adapter.unarchive(obj, **val)
-        logger.info("Object %s state is %s", obj.absolute_url(),
-                    action)
+
+        logger.info("Object %s state is %s", obj.absolute_url(), action)
         return True
 
     def recursive_action(self, orig_obj, action, val):
@@ -100,7 +112,6 @@ class ArchiveUnarchiveExecutor(object):
             obj = brain.getObject()
             storage = IObjectArchivator(obj)
             getattr(storage, action)(obj, **val)
-
 
 
 class AddForm(PloneAddForm):

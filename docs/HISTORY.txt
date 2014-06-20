@@ -3,6 +3,11 @@ Changelog
 
 7.4-dev - (unreleased)
 ----------------------
+* Bug fix: fixed archive/unarchive content rules logic.
+  [ghicaale refs #19953]
+* Upgrade step: enable on production the "Archive previous version" and
+  "Unarchive previous version" content rules.
+  [ghicaale refs #19953]
 
 7.3 - (2014-06-02)
 ------------------

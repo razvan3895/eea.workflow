@@ -19,6 +19,6 @@ class IArchiveUnarchiveAction(Interface):
         description=_("Apply action to children"))
 
     affectPreviousVersion = schema.Bool(
-        title=_('Affect previous object version'),
-        description=_("Apply action to previous version"
+        title=_('Only affect the previous object version'),
+        description=_("Apply action only to the previous version"
                       " instead of current object"))
