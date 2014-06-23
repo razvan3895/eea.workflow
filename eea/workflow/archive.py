@@ -20,6 +20,7 @@ from eea.versions.interfaces import IGetVersions
 from eea.workflow.interfaces import IObjectArchived, IObjectArchivator
 from Products.CMFPlone.utils import safe_unicode
 
+
 class ObjectArchivedAnnotationStorage(Persistent):
     """ The IObjectArchived information stored as annotation
     """
@@ -28,30 +29,45 @@ class ObjectArchivedAnnotationStorage(Persistent):
 
     @property
     def is_archived(self):
-        """Is this object archived?"""
+        """ Is this object archived?
+        """
         return bool(getattr(self, 'archive_date', False))
 
-    def unarchive(self, context, custom_message=None):
+    def unarchive(self, context, custom_message=None, initiator=None,
+                  reason=None):
         """ Unarchive the object
         :param context: object which is going to be unarchived
         :param custom_message: Custom message explaining why the object was
                unarchived
+        :param initiator: the user id or name which commissioned the archival
+        :param reason: reason id for which the object was archived
         """
         noLongerProvides(context, IObjectArchived)
 
         now = DateTime()
         context.setExpirationDate(None)
+        date = DateTime()
 
         wftool = getToolByName(context, 'portal_workflow')
+        has_workflow = wftool.getChainFor(context)
         mtool = getToolByName(context, 'portal_membership')
+
+        if not has_workflow:
+            # NOP
+            return
 
         state = wftool.getInfoFor(context, 'review_state')
         actor = mtool.getAuthenticatedMember().getId()
 
-        comments = custom_message or (u"Unarchived by %(actor)s on %(date)s" % {
-            'actor': actor,
-            'date': now.ISO8601(),
-        })
+        if custom_message:
+            reason += u" (%s)" % custom_message
+        comments = (u"Unarchived by %(actor)s on %(date)s by request "
+                    u"from %(initiator)s with reason: %(reason)s" % {
+                        'actor': actor,
+                        'initiator': initiator,
+                        'reason': reason,
+                        'date': date.ISO8601()
+                    })
 
         for wfname in context.workflow_history.keys():
             history = context.workflow_history[wfname]

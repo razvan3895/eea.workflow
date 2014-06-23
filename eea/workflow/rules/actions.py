@@ -73,13 +73,13 @@ class ArchiveUnarchiveExecutor(object):
                        'was unpublished') % orig_obj_url
 
         if self.element.affectPreviousVersion and self.element.applyRecursively:
-            if len(versions) > 1:
+            if len(versions) < 2:
                 # no action to be taken
                 return True
             else:
                 obj = versions[-2]
         elif self.element.affectPreviousVersion:
-            if len(versions) > 1:
+            if len(versions) < 2:
                 # no action to be taken
                 return True
             else:
@@ -111,6 +111,7 @@ class ArchiveUnarchiveExecutor(object):
         for brain in brains:
             obj = brain.getObject()
             storage = IObjectArchivator(obj)
+            logger.info("Object %s state is %s", obj.absolute_url(), action)
             getattr(storage, action)(obj, **val)
 
 
