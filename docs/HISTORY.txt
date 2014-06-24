@@ -1,6 +1,9 @@
 Changelog
 =========
 
+7.5-dev - (unreleased)
+----------------------
+
 7.4 - (2014-06-24)
 ------------------
 * Bug fix: fixed archive/unarchive content rules logic.
