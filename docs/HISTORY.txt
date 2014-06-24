@@ -1,8 +1,8 @@
 Changelog
 =========
 
-7.4-dev - (unreleased)
-----------------------
+7.4 - (2014-06-24)
+------------------
 * Bug fix: fixed archive/unarchive content rules logic.
   [ghicaale refs #19953]
 * Upgrade step: enable on production the "Archive previous version" and
