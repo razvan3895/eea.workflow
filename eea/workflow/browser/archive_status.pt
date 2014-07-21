@@ -1,6 +1,6 @@
-<div class="archive_status portalMessage attentionMessage" i18n:translate="archive_status_message" 
+<div class="archive_status portalMessage attentionMessage" i18n:translate="archive_status_message"
   tal:define="info view/info; toLocalizedTime nocall: context/@@plone/toLocalizedTime;">
-  This content has been archived on <span i18n:name="expiration-date" tal:content="python:toLocalizedTime(info['archive_date'])" />, reason: 
+  This content has been archived on <span i18n:name="expiration-date" tal:content="python:toLocalizedTime(info['archive_date'])" />, reason:
   <span i18n:name="reason">
     <span tal:replace="python:info['reason'].capitalize()"/>
     <span tal:condition="info/custom_message" tal:replace="python:u'(' + info['custom_message'] + u')'"/>
