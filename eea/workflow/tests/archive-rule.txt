@@ -1,0 +1,8 @@
+The Archive content rule
+------------------------
+
+    >>> self.loginAsPortalOwner()
+    >>> _ = portal.invokeFactory("Folder", 'some-folder')
+    >>> folder = portal['some-folder']
+    >>> _ = folder.invokeFactory("Document", 'some-document')
+    >>> doc = folder['some-document']
