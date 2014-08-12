@@ -1,8 +1,8 @@
 Changelog
 =========
 
-7.5-dev - (unreleased)
-----------------------
+7.5 - (2014-08-12)
+------------------
 * Bug fix: fixed JS registry conditon for archive_dialog.js
   [ghicaale refs #20389]
 * Feature: WIP created unit tests for the archive unarchive content rules
