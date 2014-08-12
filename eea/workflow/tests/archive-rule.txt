@@ -1,8 +1,60 @@
 The Archive content rule
 ------------------------
 
+Lets login into the portal.
+
+    >>> from Products.PloneTestCase import PloneTestCase
+    >>> from Testing.testbrowser import Browser
     >>> self.loginAsPortalOwner()
+    >>> browser = Browser()
+    >>> browser.handleErrors = False
+    >>> portal.error_log._ignored_exceptions = ()
+    >>> browser.addHeader('Authorization',
+    ...                   'Basic %s:%s' % (PloneTestCase.portal_owner,
+    ...                                    PloneTestCase.default_password))
+
+Lets add some content.
+
     >>> _ = portal.invokeFactory("Folder", 'some-folder')
     >>> folder = portal['some-folder']
     >>> _ = folder.invokeFactory("Document", 'some-document')
     >>> doc = folder['some-document']
+
+Let's visit the control panel and add two content rules, one for archiving
+and another one for unarchive. They will be assigned at the root of the site.
+
+    >>> browser.open(portal.absolute_url())
+    >>> browser.getLink('Site Setup').click()
+    >>> browser.getLink('Content Rules').click()
+    >>> browser.getControl('Add content rule', index=0).click()
+    >>> browser.getControl('Title').value = 'Archive previous version'
+    >>> ctrl = browser.getControl('Triggering event')
+    >>> ctrl.value = ['Workflow state changed']
+    >>> browser.getControl('Save').click()
+
+    >>> browser.open(self.portal.absolute_url())
+    >>> browser.getLink('Site Setup').click()
+    >>> browser.getLink('Content Rules').click()
+    >>> browser.getControl('Add content rule', index=0).click()
+    >>> browser.getControl('Title').value = 'Unarchive previous version'
+    >>> ctrl = browser.getControl('Triggering event')
+    >>> ctrl.value = ['Workflow state changed']
+    >>> browser.getControl('Save').click()
+
+
+
+
+
+
+
+
+Both rules should be listed on the rules page:
+
+    >>> browser.getLink('Home').click()
+    >>> browser.getLink('Rules').click()
+
+    >>> 'Archive previous version' in browser.contents
+    True
+
+    >>> 'Unarchive previous version' in browser.contents
+    True

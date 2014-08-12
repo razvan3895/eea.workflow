@@ -1,7 +1,7 @@
 The Archive workflow action
 ---------------------------
 
-The Archive action is implemented as a drop-in fake workflow action. 
+The Archive action is implemented as a drop-in fake workflow action.
 It is added in the workflow menu. If the object is archived, then this action
 is no longer available. Instead, a viewlet is shown that describes the archival
 status of the object.
