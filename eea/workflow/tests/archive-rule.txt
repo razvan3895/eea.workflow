@@ -41,12 +41,53 @@ and another one for unarchive. They will be assigned at the root of the site.
     >>> ctrl.value = ['Workflow state changed']
     >>> browser.getControl('Save').click()
 
+We're back at the control panel. Now we'll edit the content rules
+and add conditions:
 
+    >>> browser.url
+    'http://nohost/plone/++rule++rule-2/@@manage-elements'
+    >>> browser.getControl('Add condition').value = [
+    ...     'plone.conditions.WorkflowTransition']
+    >>> browser.getControl('Add', index=1).click()
+    >>> browser.getControl('Workflow transition').value = [
+    ...     'retract', 'show', 'reject']
+    >>> browser.getControl('Save').click()
 
+    >>> browser.getControl('Add condition').value = [
+    ...     'plone.conditions.TalesExpression']
+    >>> browser.getControl('Add', index=1).click()
+    >>> browser.getControl('TALES expression').value = "python:object.restrictedTraverse('@@isVersionEnhanced')() and object.restrictedTraverse('@@getLatestVersionUrl').getLatestVersionUrl() == object.absolute_url() and object.portal_type != 'Report'"
+    >>> browser.getControl('Save').click()
 
+    >>> browser.open('http://nohost/plone/++rule++rule-1/@@manage-elements')
+    >>> browser.url
+    'http://nohost/plone/++rule++rule-1/@@manage-elements'
+    >>> browser.getControl('Add condition').value = [
+    ...     'plone.conditions.WorkflowTransition']
+    >>> browser.getControl('Add', index=1).click()
+    >>> browser.getControl('Workflow transition').value = ['publish']
+    >>> browser.getControl('Save').click()
 
+    >>> browser.getControl('Add condition').value = [
+    ...     'plone.conditions.TalesExpression']
+    >>> browser.getControl('Add', index=1).click()
+    >>> browser.getControl('TALES expression').value = "python:object.restrictedTraverse('@@isVersionEnhanced')() and object.restrictedTraverse('@@getLatestVersionUrl').getLatestVersionUrl() == object.absolute_url() and object.portal_type != 'Report'"
+    >>> browser.getControl('Save').click()
 
+Now comes the content actions:
 
+    >>> browser.getControl('Add action').value = [
+    ...     'eea.workflow.rules.actions.ArchiveUnarchiveAction']
+    >>> browser.getControl('Add', index=3).click()
+    >>> browser.getControl(name='form.action').value = ['archived']
+    >>> browser.getControl('Save').click()
+
+    >>> browser.open('http://nohost/plone/++rule++rule-2/@@manage-elements')
+    >>> browser.getControl('Add action').value = [
+    ...     'eea.workflow.rules.actions.ArchiveUnarchiveAction']
+    >>> browser.getControl('Add', index=3).click()
+    >>> browser.getControl(name='form.action').value = ['unarchived']
+    >>> browser.getControl('Save').click()
 
 Both rules should be listed on the rules page:
 
@@ -58,3 +99,10 @@ Both rules should be listed on the rules page:
 
     >>> 'Unarchive previous version' in browser.contents
     True
+
+
+TODOs (see #http://taskman.eionet.europa.eu/issues/20287):
+* publish a content item, and assert that the previous version is "archived."
+* unpublish and item and assert that the previous version is "unarchived"
+* An object is created and we should see that no action is to be done
+* the content rule has the options to archive previous version and the children which also shouldn't crash if the object has only the default version assigned on creation
