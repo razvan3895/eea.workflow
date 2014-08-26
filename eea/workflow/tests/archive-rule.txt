@@ -101,8 +101,13 @@ Both rules should be listed on the rules page:
     True
 
 
+
+
+
+
+
 TODOs (see #http://taskman.eionet.europa.eu/issues/20287):
-* publish a content item, and assert that the previous version is "archived."
+* publish a content item, and assert that the previous version is "archived"
 * unpublish and item and assert that the previous version is "unarchived"
-* An object is created and we should see that no action is to be done
+* an object is created and we should see that no action is to be done
 * the content rule has the options to archive previous version and the children which also shouldn't crash if the object has only the default version assigned on creation

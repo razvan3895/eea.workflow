@@ -25,6 +25,8 @@ class ArchiveUnarchiveAction(SimpleItem):
 
     element = 'eea.workflow.rules.actions.archive_unarchive_objects'
     action = None
+    applyRecursively = False
+    affectPreviousVersion = False
 
     @property
     def summary(self):
