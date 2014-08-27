@@ -1,8 +1,8 @@
 Changelog
 =========
 
-7.6-dev - (unreleased)
-----------------------
+7.6 - (2014-08-27)
+------------------
 * Feature: WIP created unit tests for the archive unarchive content rules
   [ghicaale refs #20287]
 
