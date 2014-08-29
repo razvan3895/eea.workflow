@@ -65,7 +65,6 @@ class ArchiveUnarchiveExecutor(object):
         adapter = None
         val = dict()
         rec_action = ''
-        import pdb; pdb.set_trace()
 
         if action == "archived":
             rec_action = 'archive'
