@@ -86,6 +86,7 @@ Now comes the content actions:
     ...     'eea.workflow.rules.actions.ArchiveUnarchiveAction']
     >>> browser.getControl('Add', index=3).click()
     >>> browser.getControl(name='form.action').value = ['archived']
+    >>> browser.getControl(name='form.affectPreviousVersion').value = True
     >>> browser.getControl('Save').click()
 
     >>> browser.open('http://nohost/plone/++rule++rule-2/@@manage-elements')
@@ -93,6 +94,7 @@ Now comes the content actions:
     ...     'eea.workflow.rules.actions.ArchiveUnarchiveAction']
     >>> browser.getControl('Add', index=3).click()
     >>> browser.getControl(name='form.action').value = ['unarchived']
+    >>> browser.getControl(name='form.affectPreviousVersion').value = True
     >>> browser.getControl('Save').click()
 
 Both rules should be listed on the rules page:
