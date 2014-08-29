@@ -47,11 +47,12 @@ and another one for unarchive. They will be assigned at the root of the site.
     >>> ctrl.value = ['Workflow state changed']
     >>> browser.getControl('Save').click()
 
-We're back at the control panel. Now we'll edit the content rules
-and add conditions:
+We're back at the control panel. Now we'll edit the content rules,
+apply them to the hole site and add conditions:
 
     >>> browser.url
     'http://nohost/plone/++rule++rule-2/@@manage-elements'
+    >>> browser.getControl('Apply rule on the whole site').click()
     >>> browser.getControl('Add condition').value = [
     ...     'plone.conditions.WorkflowTransition']
     >>> browser.getControl('Add', index=1).click()
@@ -68,6 +69,7 @@ and add conditions:
     >>> browser.open('http://nohost/plone/++rule++rule-1/@@manage-elements')
     >>> browser.url
     'http://nohost/plone/++rule++rule-1/@@manage-elements'
+    >>> browser.getControl('Apply rule on the whole site').click()
     >>> browser.getControl('Add condition').value = [
     ...     'plone.conditions.WorkflowTransition']
     >>> browser.getControl('Add', index=1).click()
@@ -120,7 +122,7 @@ Lets add some page and a new version of it:
     True
     >>> wftool = getToolByName(portal, "portal_workflow")
 
-Lets publish a content item, and assert that the previous version is "archived".
+Lets publish a content item, and check that the previous version is "archived".
 
     >>> adapter = IGetVersions(page1_obj)
     >>> adapter.isLatest()
@@ -132,36 +134,26 @@ Lets publish a content item, and assert that the previous version is "archived".
     True
     >>> print adapter.earlier_versions()
     [{'url': 'http://nohost/plone/page1', 'date': DateTime('...'), 'review_state': 'private', 'title_state': 'Private', 'title': 'page1'}]
-
     >>> IObjectArchived.providedBy(page1_obj)
     False
     >>> IObjectArchived.providedBy(ver_obj)
     False
-
     >>> wftool.doActionFor(page1_obj, 'publish')
     >>> wftool.doActionFor(ver_obj, 'publish')
-    >>> wftool.doActionFor(ver_obj, 'retract')
+    >>> IObjectArchived.providedBy(page1_obj)
+    True
+    >>> IObjectArchived.providedBy(ver_obj)
+    False
 
+Lets unpublish and item and check that the previous version is "unarchived".
+
+    >>> wftool.doActionFor(ver_obj, 'retract')
     >>> IObjectArchived.providedBy(page1_obj)
     False
     >>> IObjectArchived.providedBy(ver_obj)
     False
-
-    >>> adapter = IGetVersions(page1_obj)
-    >>> adapter.isLatest()
-    False
-    >>> print adapter.earlier_versions()
-    []
-    >>> adapter = IGetVersions(ver_obj)
-    >>> adapter.isLatest()
-    True
-    >>> print adapter.earlier_versions()
-    [{'url': 'http://nohost/plone/page1', 'date': DateTime('...'), 'review_state': 'published', 'title_state': 'Published', 'title': 'page1'}]
-
-
 
 
 TODOs (see #http://taskman.eionet.europa.eu/issues/20287):
-* unpublish and item and assert that the previous version is "unarchived"
 * an object is created and we should see that no action is to be done
 * the content rule has the options to archive previous version and the children which also shouldn't crash if the object has only the default version assigned on creation
