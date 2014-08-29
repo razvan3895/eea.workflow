@@ -89,6 +89,7 @@ Now comes the content actions:
     >>> browser.getControl('Add', index=3).click()
     >>> browser.getControl(name='form.action').value = ['archived']
     >>> browser.getControl(name='form.affectPreviousVersion').value = True
+    >>> browser.getControl(name='form.applyRecursively').value = True
     >>> browser.getControl('Save').click()
 
     >>> browser.open('http://nohost/plone/++rule++rule-2/@@manage-elements')
@@ -97,6 +98,7 @@ Now comes the content actions:
     >>> browser.getControl('Add', index=3).click()
     >>> browser.getControl(name='form.action').value = ['unarchived']
     >>> browser.getControl(name='form.affectPreviousVersion').value = True
+    >>> browser.getControl(name='form.applyRecursively').value = True
     >>> browser.getControl('Save').click()
 
 Both rules should be listed on the rules page:
@@ -152,8 +154,3 @@ Lets unpublish and item and check that the previous version is "unarchived".
     False
     >>> IObjectArchived.providedBy(ver_obj)
     False
-
-
-TODOs (see #http://taskman.eionet.europa.eu/issues/20287):
-* an object is created and we should see that no action is to be done
-* the content rule has the options to archive previous version and the children which also shouldn't crash if the object has only the default version assigned on creation
