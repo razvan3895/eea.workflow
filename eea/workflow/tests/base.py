@@ -5,6 +5,11 @@ from Products.Five import zcml
 from Products.PloneTestCase import PloneTestCase as ptc
 from Products.PloneTestCase.layer import onsetup
 
+import collective.monkeypatcher
+import eea.workflow
+import eea.versions
+import eea.jquery
+
 
 @onsetup
 def setup_site():
@@ -14,14 +19,9 @@ def setup_site():
     until the setup of the Plone site testing layer.
     """
     fiveconfigure.debug_mode = True
-
-    import collective.monkeypatcher
     zcml.load_config('configure.zcml', collective.monkeypatcher)
-    import eea.workflow
     zcml.load_config('configure.zcml', eea.workflow)
-    import eea.versions
     zcml.load_config('configure.zcml', eea.versions)
-    import eea.jquery
     zcml.load_config('configure.zcml', eea.jquery)
     fiveconfigure.debug_mode = False
 
@@ -30,12 +30,16 @@ setup_site()
 ptc.installProduct("ATVocabularyManager")
 ptc.setupPloneSite(
         products=["ATVocabularyManager"],
-        extension_profiles=['eea.workflow:default', 'eea.versions:default'],
+        extension_profiles=['eea.workflow:default',
+                            'eea.versions:default'],
 )
+
 
 class TestCase(ptc.PloneTestCase):
     """ Base class used for test cases
     """
+
+
 class FunctionalTestCase(ptc.FunctionalTestCase):
     """ Test case class used for functional (doc-)tests
     """

@@ -1,10 +1,16 @@
 The Archive content rule
 ------------------------
 
-Lets login into the portal.
+Various needed imports.
 
     >>> from Products.PloneTestCase import PloneTestCase
     >>> from Testing.testbrowser import Browser
+    >>> from Products.CMFCore.utils import getToolByName
+    >>> from eea.workflow.interfaces import IObjectArchived
+    >>> from eea.versions.interfaces import IGetVersions
+
+Lets login into the portal.
+
     >>> self.loginAsPortalOwner()
     >>> browser = Browser()
     >>> browser.handleErrors = False
@@ -32,7 +38,7 @@ and another one for unarchive. They will be assigned at the root of the site.
     >>> ctrl.value = ['Workflow state changed']
     >>> browser.getControl('Save').click()
 
-    >>> browser.open(self.portal.absolute_url())
+    >>> browser.open(portal.absolute_url())
     >>> browser.getLink('Site Setup').click()
     >>> browser.getLink('Content Rules').click()
     >>> browser.getControl('Add content rule', index=0).click()
@@ -56,7 +62,7 @@ and add conditions:
     >>> browser.getControl('Add condition').value = [
     ...     'plone.conditions.TalesExpression']
     >>> browser.getControl('Add', index=1).click()
-    >>> browser.getControl('TALES expression').value = "python:object.restrictedTraverse('@@isVersionEnhanced')() and object.restrictedTraverse('@@getLatestVersionUrl').getLatestVersionUrl() == object.absolute_url() and object.portal_type != 'Report'"
+    >>> browser.getControl('TALES expression').value = "python:object.restrictedTraverse('@@isVersionEnhanced')() and object.restrictedTraverse('@@getLatestVersionUrl').getLatestVersionUrl() == object.absolute_url()"
     >>> browser.getControl('Save').click()
 
     >>> browser.open('http://nohost/plone/++rule++rule-1/@@manage-elements')
@@ -71,7 +77,7 @@ and add conditions:
     >>> browser.getControl('Add condition').value = [
     ...     'plone.conditions.TalesExpression']
     >>> browser.getControl('Add', index=1).click()
-    >>> browser.getControl('TALES expression').value = "python:object.restrictedTraverse('@@isVersionEnhanced')() and object.restrictedTraverse('@@getLatestVersionUrl').getLatestVersionUrl() == object.absolute_url() and object.portal_type != 'Report'"
+    >>> browser.getControl('TALES expression').value = "python:object.restrictedTraverse('@@isVersionEnhanced')() and object.restrictedTraverse('@@getLatestVersionUrl').getLatestVersionUrl() == object.absolute_url()"
     >>> browser.getControl('Save').click()
 
 Now comes the content actions:
@@ -100,14 +106,60 @@ Both rules should be listed on the rules page:
     >>> 'Unarchive previous version' in browser.contents
     True
 
+Lets add some page and a new version of it:
 
+    >>> page1_id = portal.invokeFactory('Document', 'page1')
+    >>> page1_obj = portal._getOb(page1_id)
+    >>> createVersionView = page1_obj.unrestrictedTraverse('@@createVersion')
+    >>> vertmp = createVersionView()
+    >>> version_id = vertmp[vertmp.rfind('/')+1:]
+    >>> ver_obj = portal._getOb(version_id)
+    >>> ver_obj.id == 'page1-1'
+    True
+    >>> wftool = getToolByName(portal, "portal_workflow")
 
+Lets publish a content item, and assert that the previous version is "archived".
+
+    >>> adapter = IGetVersions(page1_obj)
+    >>> adapter.isLatest()
+    False
+    >>> print adapter.earlier_versions()
+    []
+    >>> adapter = IGetVersions(ver_obj)
+    >>> adapter.isLatest()
+    True
+    >>> print adapter.earlier_versions()
+    [{'url': 'http://nohost/plone/page1', 'date': DateTime('...'), 'review_state': 'private', 'title_state': 'Private', 'title': 'page1'}]
+
+    >>> IObjectArchived.providedBy(page1_obj)
+    False
+    >>> IObjectArchived.providedBy(ver_obj)
+    False
+
+    >>> wftool.doActionFor(page1_obj, 'publish')
+    >>> wftool.doActionFor(ver_obj, 'publish')
+    >>> wftool.doActionFor(ver_obj, 'retract')
+
+    >>> IObjectArchived.providedBy(page1_obj)
+    False
+    >>> IObjectArchived.providedBy(ver_obj)
+    False
+
+    >>> adapter = IGetVersions(page1_obj)
+    >>> adapter.isLatest()
+    False
+    >>> print adapter.earlier_versions()
+    []
+    >>> adapter = IGetVersions(ver_obj)
+    >>> adapter.isLatest()
+    True
+    >>> print adapter.earlier_versions()
+    [{'url': 'http://nohost/plone/page1', 'date': DateTime('...'), 'review_state': 'published', 'title_state': 'Published', 'title': 'page1'}]
 
 
 
 
 TODOs (see #http://taskman.eionet.europa.eu/issues/20287):
-* publish a content item, and assert that the previous version is "archived"
 * unpublish and item and assert that the previous version is "unarchived"
 * an object is created and we should see that no action is to be done
 * the content rule has the options to archive previous version and the children which also shouldn't crash if the object has only the default version assigned on creation
