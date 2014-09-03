@@ -3,6 +3,8 @@ Changelog
 
 7.7-dev - (unreleased)
 ----------------------
+* Change: finished archive unarchive content rules tests
+  [ichimdav refs #20287]
 
 7.6 - (2014-08-27)
 ------------------

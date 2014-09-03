@@ -148,7 +148,13 @@ Lets publish a content item, and check that the previous version is "archived".
     False
 
 Lets unpublish and item and check that the previous version is "unarchived".
+In order to do so we need to change the name of the unarchive rule since within the test request
+the unarchive rule has ran already and plone.app.contentrules has a check which prevents the rules
+from running multiple times on a given context:
 
+    >>> rule = page1_obj.restrictedTraverse("/plone/++rule++rule-2")
+    >>> rule.__name__ = "unarchive"
+    >>> rule._p_changed = True
     >>> wftool.doActionFor(ver_obj, 'retract')
     >>> IObjectArchived.providedBy(page1_obj)
     False
