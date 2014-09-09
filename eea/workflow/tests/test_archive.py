@@ -73,3 +73,12 @@ class TestArchive(TestCase):
         objects = archive_previous_versions(version, also_children=True)
         expected_output = [self.folder, self.doc]
         assert objects == expected_output
+
+
+def test_suite():
+    """ Test Suite
+    """
+    from unittest import TestSuite, makeSuite
+    suite = TestSuite()
+    suite.addTest(makeSuite(TestArchive))
+    return suite
