@@ -1,6 +1,9 @@
 Changelog
 =========
 
+7.8-dev - (unreleased)
+----------------------
+
 7.7 - (2014-09-15)
 ------------------
 * Change: finished archive unarchive content rules tests
