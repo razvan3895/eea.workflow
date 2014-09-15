@@ -1,8 +1,8 @@
 Changelog
 =========
 
-7.7-dev - (unreleased)
-----------------------
+7.7 - (2014-09-15)
+------------------
 * Change: finished archive unarchive content rules tests
   [ichimdav refs #20287]
 
