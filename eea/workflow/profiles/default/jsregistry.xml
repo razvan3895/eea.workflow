@@ -6,7 +6,8 @@
   <javascript id="publish_dialog.js"
         expression="python: (not portal.portal_membership.isAnonymousUser()) and object.meta_type in ['Assessment', 'Specification']"
     />
-  <javascript id="archive_dialog.js"
-        expression="python: (not here.restrictedTraverse('@@plone_portal_state').anonymous()) and (not here.restrictedTraverse('@@plone_interface_info').provides('eea.workflow.interfaces.IObjectArchived'))"
+
+  <javascript id="archive_dialog.js" authenticated="True" />
+
     />
 </object>

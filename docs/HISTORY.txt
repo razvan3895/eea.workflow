@@ -3,6 +3,10 @@ Changelog
 
 7.8-dev - (unreleased)
 ----------------------
+* Change: removed condition for loading archive_dialog.js since it needs
+  to load when the object is archived and instead set the authenticated flag
+  to true
+  [ichimdav]
 
 7.7 - (2014-09-15)
 ------------------
