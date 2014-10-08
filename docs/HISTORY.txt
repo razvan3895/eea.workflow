@@ -7,6 +7,9 @@ Changelog
   to load when the object is archived and instead set the authenticated flag
   to true
   [ichimdav]
+* Bug fix: fixed archive/unarchive action to take into account the parent when
+  context is a default page in folder.
+  [ghicaale refs #21123]
 
 7.7 - (2014-09-15)
 ------------------

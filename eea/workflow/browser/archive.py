@@ -3,7 +3,7 @@
 
 from Products.Five import BrowserView
 from Products.statusmessages.interfaces import IStatusMessage
-from zope.component import queryAdapter
+from zope.component import queryAdapter, getMultiAdapter
 from plone.protect import PostOnly
 
 from Products.CMFPlone.utils import getToolByName
@@ -36,16 +36,22 @@ class ArchiveContent(BrowserView):
                'custom_message': form.get('workflow_other_reason', '').strip(),
                'reason': form.get('workflow_reasons_radio', 'other'),
         }
+
+        context = self.context
+        ploneview = getMultiAdapter((context, self.request), name='plone')
+        if ploneview.isDefaultPageInFolder():
+            context = self.context.getParentNode()
+
         if recurse and not prev_versions:
-            archive_obj_and_children(self.context, **val)
+            archive_obj_and_children(context, **val)
         elif recurse and prev_versions:
-            archive_obj_and_children(self.context, **val)
-            archive_previous_versions(self.context, also_children=True, **val)
+            archive_obj_and_children(context, **val)
+            archive_previous_versions(context, also_children=True, **val)
         elif prev_versions and not recurse:
-            archive_object(self.context, **val)
-            archive_previous_versions(self.context, **val)
+            archive_object(context, **val)
+            archive_previous_versions(context, **val)
         else:
-            archive_object(self.context, **val)
+            archive_object(context, **val)
 
         return "OK"
 
@@ -58,9 +64,15 @@ class UnArchiveContent(BrowserView):
         PostOnly(self.request)
         form = self.request.form
         recurse = form.get('workflow_unarchive_recurse', False)
+
+        context = self.context
+        ploneview = getMultiAdapter((context, self.request), name='plone')
+        if ploneview.isDefaultPageInFolder():
+            context = self.context.getParentNode()
+
         if recurse:
-            catalog = getToolByName(self.context, 'portal_catalog')
-            query = {'path': '/'.join(self.context.getPhysicalPath())}
+            catalog = getToolByName(context, 'portal_catalog')
+            query = {'path': '/'.join(context.getPhysicalPath())}
             brains = catalog.searchResults(query)
 
             for brain in brains:
@@ -70,13 +82,13 @@ class UnArchiveContent(BrowserView):
                     storage.unarchive(obj)
             msg = "Object and contents have been unarchived"
         else:
-            storage = queryAdapter(self.context, IObjectArchivator)
-            storage.unarchive(self.context)
+            storage = queryAdapter(context, IObjectArchivator)
+            storage.unarchive(context)
             msg = "Object has been unarchived"
 
-        IStatusMessage(self.context.REQUEST).add(msg, 'info')
+        IStatusMessage(context.REQUEST).add(msg, 'info')
 
-        return self.request.response.redirect(self.context.absolute_url())
+        return self.request.response.redirect(context.absolute_url())
 
 
 class ArchiveStatus(BrowserView):
