@@ -1,6 +1,9 @@
 Changelog
 =========
 
+7.9-dev - (unreleased)
+----------------------
+
 7.8 - (2014-10-15)
 ------------------
 * Change: removed condition for loading archive_dialog.js since it needs
