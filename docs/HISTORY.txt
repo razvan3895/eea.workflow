@@ -1,8 +1,8 @@
 Changelog
 =========
 
-7.8-dev - (unreleased)
-----------------------
+7.8 - (2014-10-15)
+------------------
 * Change: removed condition for loading archive_dialog.js since it needs
   to load when the object is archived and instead set the authenticated flag
   to true
