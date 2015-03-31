@@ -7,6 +7,7 @@ from eea.workflow.interfaces import IValueProvider
 from zope.component import getMultiAdapter, queryAdapter
 from zope.component import queryMultiAdapter
 from zope.interface import implements
+from Products.Archetypes.interfaces import ISchema
 
 OTHER_METADATA_FIELDS = (
         'locallyAllowedTypes',
@@ -88,7 +89,7 @@ class ObjectReadiness(object):
                     }
             return
 
-        for field in self.context.schema.fields():  #we assume AT here
+        for field in ISchema(self.context).values():  #we assume AT here
             field_name = field.getName()
             if field.isMetadata or (field_name in OTHER_METADATA_FIELDS):
                 continue

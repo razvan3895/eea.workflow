@@ -3,6 +3,8 @@ Changelog
 
 8.0.dev0 - (unreleased)
 -----------------------
+* Change: include the fields added by a schema extender in the readiness script
+  [szabozo0 refs #24412]
 
 7.9 - (2015-03-17)
 ------------------
