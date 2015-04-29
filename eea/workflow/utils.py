@@ -21,7 +21,7 @@ class ATFieldValueProvider(object):
         self.field = field
 
     def has_value(self, **kwargs):
-        """ Has value 
+        """ Has value
         """
         return bool(self.get_value())  #may trigger false positives
 
@@ -30,8 +30,8 @@ class ATFieldValueProvider(object):
         """
         accessor = self.field.getAccessor(self.context)
         if not accessor:
-            logger.warning("Field %s for %s has no accessor" % 
-                        (self.field, self.context))
+            logger.warning("Field %s for %s has no accessor",
+                        self.field, self.context)
             return None
         return accessor()
 
@@ -40,9 +40,9 @@ class ATFieldValueProvider(object):
         """
         accessor = self.field.getAccessor(self.context)
         if accessor is None:
-            logger.warning("Field %s for %s has no accessor" % 
-                        (self.field, self.context))
-            
+            logger.warning("Field %s for %s has no accessor",
+                        self.field, self.context)
+
             return {
                 'raw_value':None,
                 'value':None,
@@ -70,15 +70,15 @@ class TextFieldValueProvider(ATFieldValueProvider):
         convert = getToolByName(self.context, 'portal_transforms').convert
         accessor = self.field.getAccessor(self.context)
         if not accessor:
-            logger.warning("Field %s for %s has no accessor" % 
-                        (self.field, self.context))
+            logger.warning("Field %s for %s has no accessor",
+                        self.field, self.context)
             return False
         value = accessor()
         text = convert('html_to_text', value).getData().strip()
         if not isinstance(text, unicode):
             text = unicode(text, 'utf-8', 'ignore')
         words = process_unicode(text)
-        return len(list(words)) > 1   #there should be at least 2 words, or 
+        return len(list(words)) > 1   #there should be at least 2 words, or
                                 #the field is considered empty
 
     def value_info(self, **kwargs):
@@ -86,9 +86,9 @@ class TextFieldValueProvider(ATFieldValueProvider):
         """
         accessor = self.field.getAccessor(self.context)
         if accessor is None:
-            logger.warning("Field %s for %s has no accessor" % 
-                        (self.field, self.context))
-            
+            logger.warning("Field %s for %s has no accessor",
+                        self.field, self.context)
+
             return {
                 'raw_value':None,
                 'value':None,

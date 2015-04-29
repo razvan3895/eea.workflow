@@ -30,6 +30,8 @@ class ArchiveUnarchiveAction(SimpleItem):
 
     @property
     def summary(self):
+        """ Summary
+        """
         apply_recursively = getattr(self, "applyRecursively")
         affect_previous_version = getattr(self, "affectPreviousVersion")
         msg_template = "%s will be: %s" % ("%s", self.action)
@@ -105,7 +107,7 @@ class ArchiveUnarchiveExecutor(object):
         return True
 
     def recursive_action(self, orig_obj, action, val):
-        """
+        """ Recursive action
         """
         catalog = getToolByName(self.context, 'portal_catalog')
         query = {'path': '/'.join(orig_obj.getPhysicalPath())}

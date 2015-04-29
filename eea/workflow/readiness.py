@@ -20,11 +20,15 @@ OTHER_METADATA_FIELDS = (
 class ObjectReadiness(object):
     """Provides information about the readiness for doing a certain transition
 
-    An object can have field that are required to be filled in before a workflow transition
-    is available for it. To implement this we look for a 'required_for_YYY' boolean,
+    An object can have field that are required to be filled in before a workflow
+    transition
+    is available for it. To implement this we look for a 'required_for_YYY'
+    boolean,
     where YYY is the workflow state to which we want to transition.
-    In addition, if this attribute is missing, we try to call a method "required_for"
-    on the field, which receives the object instance and state name as parameters.
+    In addition, if this attribute is missing, we try to call a method
+    "required_for"
+    on the field, which receives the object instance and state name as
+    parameters.
     """
 
     implements(IObjectReadiness)
@@ -135,7 +139,8 @@ class ObjectReadiness(object):
                 extras.append(('error', error))
             else:
                 rfs_with_value += 1
-                _debug_required_fields_with_value.append("CONDITION CHECKS OK: " + error)
+                _debug_required_fields_with_value.append(
+                    "CONDITION CHECKS OK: " + error)
 
         #We calculate the stats for the dependencies
         for part in depends_on:
@@ -166,9 +171,10 @@ class ObjectReadiness(object):
                 'optional_with_value':optional_with_value,
                 'extra':extras,  #extra messages that will be displayed in the
                                                 # portlet, in the form of tuples
-                'conditions':len(checks),
-                '_debug_all_fieldnames':_debug_all_fieldnames,
-                '_debug_required_fields_with_value':_debug_required_fields_with_value
+                'conditions': len(checks),
+                '_debug_all_fieldnames': _debug_all_fieldnames,
+                '_debug_required_fields_with_value':
+                    _debug_required_fields_with_value
                 }
         return info
 
