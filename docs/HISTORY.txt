@@ -3,9 +3,6 @@ Changelog
 
 8.1.dev0 - (unreleased)
 -----------------------
-* Change: added parameters to method found within interfaces.py in order to
-  please IDE's and pylint
-  [ichimdav]
 
 8.0 - (2015-04-02)
 ------------------

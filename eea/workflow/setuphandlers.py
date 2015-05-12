@@ -31,8 +31,8 @@ def setupATVocabularies(context):
 
         logger.info("Adding vocabulary %s", vkey)
 
-        #atvm.invokeFactory('SimpleVocabulary', vkey)
-        #simple = atvm.getVocabularyByName(vkey)
-        #for (key, val) in ATVOCABS[vkey]:
-        #    simple.addTerm(key, val)
+        atvm.invokeFactory('SimpleVocabulary', vkey)
+        simple = atvm.getVocabularyByName(vkey)
+        for (key, val) in ATVOCABS[vkey]:
+            simple.addTerm(key, val)
 
