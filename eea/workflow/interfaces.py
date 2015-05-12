@@ -73,7 +73,7 @@ class IObjectReadiness(Interface):
     depends_on = Attribute("A list of objects whose marked fields "
                                                         "should be considered")
 
-    def get_info_for(state_name):
+    def get_info_for(self, state_name):
         """ Returns a mapping containing statistics on object readiness
         for a certain state
         """
@@ -102,7 +102,7 @@ class IObjectArchivator(Interface):
     # object's ExpirationDate can be changed
     archive_date = Attribute("The date when the object was archived")
 
-    def archive(self):
+    def archive(self, initiator=None, reason=None, custom_message=None):
         """ Archives the object """
 
     def unarchive(self):

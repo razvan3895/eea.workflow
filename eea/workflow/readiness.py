@@ -92,7 +92,7 @@ class ObjectReadiness(object):
                     '_debug_required_fields_with_value':[]
                     }
             return
-
+        #import pdb; pdb.set_trace()
         for field in ISchema(self.context).values():  #we assume AT here
             field_name = field.getName()
             if field.isMetadata or (field_name in OTHER_METADATA_FIELDS):
