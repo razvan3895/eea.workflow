@@ -19,8 +19,8 @@ class InitialStateCreatedEvent(ObjectEvent):
     implements(IInitialStateCreatedEvent)
 
 INITIAL_ITEM_CREATION = "Initial item creation"
-NEW_VERSION           = "New version"
-COPIED                = "Copied"
+NEW_VERSION = "New version"
+COPIED = "Copied"
 
 
 def handle_workflow_initial_state_created(obj, event):

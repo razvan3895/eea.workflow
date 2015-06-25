@@ -1,4 +1,4 @@
-""" Test history 
+""" Test history
 """
 from eea.versions.versions import create_version
 from eea.workflow.events import COPIED
@@ -30,16 +30,16 @@ class TestHistory(TestCase):
         """ Test history copy
         """
         portal = self.portal
-        fid    = portal.invokeFactory("Folder", 'f1')
+        fid = portal.invokeFactory("Folder", 'f1')
         folder = portal[fid]
 
         wftool = portal.portal_workflow
         wftool.doActionFor(folder, 'publish')
-        clipb  = portal.manage_copyObjects(ids = fid)
-        res    = portal.manage_pasteObjects(clipb)
+        clipb = portal.manage_copyObjects(ids=fid)
+        res = portal.manage_pasteObjects(clipb)
         new_id = res[0]['new_id']
         foldercopy = portal[new_id]
-    
+
         history = foldercopy.workflow_history['simple_publication_workflow']
 
         assert len(history) == 3
@@ -52,7 +52,7 @@ class TestHistory(TestCase):
         """ Test history version
         """
         portal = self.portal
-        fid    = portal.invokeFactory("Folder", 'f1')
+        fid = portal.invokeFactory("Folder", 'f1')
         folder = portal[fid]
         wftool = portal.portal_workflow
         wftool.doActionFor(folder, 'publish')

@@ -78,8 +78,8 @@ class IObjectReadiness(Interface):
         for a certain state
         """
 
-    def is_ready_for(state_name):
-        """ Returns a bool that tells is the object is ready to be transitioned
+    def is_ready_for(self, state_name):
+        """ Returns a bool that tells if the object is ready to be transitioned
         to the named state
         """
 

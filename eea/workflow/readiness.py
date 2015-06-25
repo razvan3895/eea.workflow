@@ -56,11 +56,11 @@ class ObjectReadiness(object):
         extras = []
         checks = self.checks.get(state_name, [])
 
-        rfs_required   = 0 + len(checks) #the number of fields that are RFS
+        rfs_required = 0 + len(checks) #the number of fields that are RFS
         rfs_with_value = 0 #the fields RFS that are filled in
         optional_empty = 0 #fields that are not RFS and are not filled in
-        total_fields   = 0 #the grand total of fields
-        rfs_done       = 0 #the percentage of fields RFS that are filled in
+        total_fields = 0 #the grand total of fields
+        rfs_done = 0 #the percentage of fields RFS that are filled in
         rfs_field_names = []    #the names of fields that are RFS but
                                                            # have no value
         rfs_done_field_names = []   #the names of fields that are RFS and
@@ -207,4 +207,3 @@ class ObjectReadinessView(object):
         """ Is object ready for state name
         """
         return IObjectReadiness(self.context).is_ready_for(state_name)
-
